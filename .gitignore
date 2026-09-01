@@ -1,0 +1,8 @@
+01 1안/
+.gstack/
+*.log
+*.png
+__pycache__/
+.DS_Store
+Thumbs.db
+

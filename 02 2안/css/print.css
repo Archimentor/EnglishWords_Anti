@@ -1,0 +1,225 @@
+/* ===== A4 Printable Worksheet & Test Stylesheet ===== */
+
+/* Screen Preview Container */
+#print-sheet-area {
+  display: none;
+}
+
+@media screen {
+  .print-page-a4 {
+    background: #ffffff;
+    color: #1e293b;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+  }
+}
+
+/* ===== Print Mode Media Query ===== */
+@media print {
+  /* Hide standard Web UI elements */
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 10.5pt;
+    line-height: 1.35;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .app-header,
+  .bottom-nav,
+  .screen,
+  .modal-overlay,
+  .toast-container,
+  #confetti-canvas,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  #print-sheet-area {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .print-page-a4 {
+    width: 100%;
+    margin: 0 auto;
+    padding: 10mm 12mm;
+    box-sizing: border-box;
+    page-break-after: auto;
+  }
+
+  /* Header */
+  .print-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2pt solid #000000;
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+
+  .print-main-title {
+    font-size: 16pt;
+    font-weight: 900;
+    color: #000000;
+    margin: 0 0 2px 0;
+  }
+
+  .print-meta-sub {
+    font-size: 8.5pt;
+    color: #444444;
+  }
+
+  .print-score-box {
+    border: 1pt solid #000000;
+    padding: 6px 12px;
+    font-size: 9pt;
+    line-height: 1.6;
+    min-width: 180px;
+    background: #fafafa;
+  }
+
+  /* 2-Column Test Layout */
+  .print-test-columns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 20mm;
+    row-gap: 4.5mm;
+  }
+
+  .print-question-item {
+    display: flex;
+    align-items: baseline;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .q-number {
+    font-weight: 800;
+    width: 22px;
+    flex-shrink: 0;
+  }
+
+  .q-prompt {
+    font-weight: 600;
+    margin-right: 6px;
+    white-space: nowrap;
+  }
+
+  .p-pos {
+    font-size: 8pt;
+    color: #555555;
+    font-weight: normal;
+  }
+
+  .p-ipa {
+    font-size: 8.5pt;
+    color: #666666;
+    font-family: serif;
+    font-style: italic;
+  }
+
+  .q-answer-blank {
+    flex: 1;
+    display: inline-block;
+    border-bottom: 1pt solid #888888;
+    height: 14pt;
+    margin-left: 4px;
+  }
+
+  /* Answer Table */
+  .print-answer-table {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .answer-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+  }
+
+  .answer-table th, .answer-table td {
+    border: 1pt solid #333333;
+    padding: 5px 8px;
+    text-align: left;
+  }
+
+  .answer-table th {
+    background: #eeeeee;
+    font-weight: 800;
+  }
+
+  .td-num {
+    width: 35px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .td-pos {
+    width: 45px;
+    text-align: center;
+  }
+
+  /* 2-Column Pocket Vocab Sheet */
+  .print-pocket-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 12mm;
+    row-gap: 4mm;
+  }
+
+  .pocket-word-row {
+    display: flex;
+    gap: 8px;
+    padding: 4px 0;
+    border-bottom: 0.5pt dashed #cccccc;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .p-num {
+    font-weight: 800;
+    font-size: 8.5pt;
+    width: 18px;
+    color: #555;
+  }
+
+  .p-main {
+    flex: 1;
+  }
+
+  .p-word-ipa {
+    font-size: 9.5pt;
+  }
+
+  .p-meaning {
+    font-size: 9pt;
+    font-weight: 700;
+    color: #000;
+  }
+
+  .p-example {
+    font-size: 8pt;
+    color: #555;
+    font-style: italic;
+  }
+
+  /* Footer */
+  .print-footer {
+    border-top: 1pt solid #000000;
+    margin-top: 14px;
+    padding-top: 6px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8pt;
+    color: #555555;
+  }
+}

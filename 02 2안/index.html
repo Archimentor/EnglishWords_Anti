@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>📚 영단어 마스터 PRO 2.0 — 기초~고등학교 체계적 학습기</title>
+
+  <!-- Pretendard Web Font -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+  <!-- Confetti Canvas for Celebrations -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- A4 Printable Sheet Area (Used during window.print) -->
+  <div id="print-sheet-area"></div>
+
+  <!-- Main App Shell -->
+  <div class="app-container">
+    <!-- Top App Header -->
+    <header class="app-header">
+      <div class="app-logo" onclick="App.goHome()">
+        <div class="logo-badge">📚</div>
+        <div class="logo-text-group">
+          <h1>영단어 마스터 <span class="logo-version">PRO 2.0</span></h1>
+          <div class="logo-sub">초등 기초 · 중학 핵심 · 수능 1등급</div>
+        </div>
+      </div>
+      <div class="header-right-actions">
+        <button class="btn-icon-circle" onclick="App.openAddWordModal()" title="나만의 단어 추가">➕</button>
+        <button class="btn-icon-circle" onclick="UI.toggleTheme()" title="테마 전환">
+          <span class="theme-toggle-icon">🌙</span>
+        </button>
+        <button class="btn-icon-circle" onclick="App.openSettingsModal()" title="환경 설정">⚙️</button>
+      </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 1: Dashboard (메인 홈 대시보드) -->
+    <!-- ========================================== -->
+    <main id="dashboard-screen" class="screen active">
+      <!-- Hero Banner -->
+      <div class="dash-hero-banner">
+        <div class="hero-greeting">
+          <h2>👋 오늘도 목표를 향해 한 걸음!</h2>
+          <p>에빙하우스 망각곡선 기반 맞춤 어휘 훈련</p>
+        </div>
+        <div class="hero-xp-pill">
+          <span id="dash-xp-level">Lv.1</span> · <span id="dash-xp-title">어휘 초심자</span>
+        </div>
+      </div>
+
+      <!-- Daily Goal Card -->
+      <div class="dash-goal-card">
+        <div class="goal-header">
+          <span>🎯 오늘의 학습 목표</span>
+          <span id="dash-goal-text">0 / 20 단어 (0%)</span>
+        </div>
+        <div class="goal-progress-bar">
+          <div class="goal-progress-fill" id="dash-goal-progress" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- 3-Stats Grid -->
+      <div class="dash-stats-grid">
+        <div class="stat-box" onclick="App.goToWordList()">
+          <div class="stat-icon">📖</div>
+          <div class="stat-value" id="dash-total-words">0</div>
+          <div class="stat-label">전체 어휘</div>
+        </div>
+        <div class="stat-box" onclick="App.goToStats()">
+          <div class="stat-icon">✨</div>
+          <div class="stat-value" id="dash-mastered-words">0</div>
+          <div class="stat-label">마스터 단어</div>
+        </div>
+        <div class="stat-box" onclick="App.goToStats()">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" id="dash-streak-days">0</div>
+          <div class="stat-label">연속 출석일</div>
+        </div>
+      </div>
+
+      <!-- Review Alert Banner (Dynamic) -->
+      <div id="dash-review-banner" class="dash-alert-banner review-theme" style="display:none;"></div>
+
+      <!-- Wrong Words Alert Banner (Dynamic) -->
+      <div id="dash-wrong-banner" class="dash-alert-banner wrong-theme" style="display:none;"></div>
+
+      <!-- Curriculum Cards Section -->
+      <div class="section-title-row">
+        <h3>📚 단계별 체계적 커리큘럼</h3>
+        <button class="btn-outline" onclick="App.goToWordList('all')">전체 단어장 →</button>
+      </div>
+
+      <div class="level-cards-list" id="dash-level-cards">
+        <!-- Rendered by JS -->
+      </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 2: Curriculum Screen (Day별 로드맵) -->
+    <!-- ========================================== -->
+    <main id="curriculum-screen" class="screen">
+      <div id="curriculum-header-area"></div>
+      <div class="curriculum-days-list" id="curriculum-days-list"></div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 3: Word List / Dictionary (단어 사전) -->
+    <!-- ========================================== -->
+    <main id="wordlist-screen" class="screen">
+      <div class="section-title-row">
+        <h3>📖 스마트 어휘 사전</h3>
+        <span id="wordlist-total-count" class="text-muted-sm">0개 단어</span>
+      </div>
+
+      <div class="wordlist-controls-bar">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="word-search-input" class="word-search-input" placeholder="영단어, 한글 뜻, 어원 검색...">
+        </div>
+
+        <div class="wordlist-filters-row">
+          <select id="word-level-filter" class="word-select-level" onchange="App.filterWordsByLevel(this.value)">
+            <option value="all">전체 레벨 (Level 1~5)</option>
+            <option value="1">🌱 Level 1 · 초등 기초</option>
+            <option value="2">📗 Level 2 · 중학 기본</option>
+            <option value="3">📘 Level 3 · 중학 심화</option>
+            <option value="4">📙 Level 4 · 고등 필수</option>
+            <option value="5">📕 Level 5 · 고등 심화</option>
+          </select>
+
+          <button class="filter-tab-btn active" data-filter="all" onclick="App.filterWordsByTab('all', this)">전체</button>
+          <button class="filter-tab-btn" data-filter="bookmarked" onclick="App.filterWordsByTab('bookmarked', this)">⭐ 북마크</button>
+          <button class="filter-tab-btn" data-filter="wrong" onclick="App.filterWordsByTab('wrong', this)">📝 오답</button>
+          <button class="filter-tab-btn" data-filter="learning" onclick="App.filterWordsByTab('learning', this)">학습중</button>
+          <button class="filter-tab-btn" data-filter="mastered" onclick="App.filterWordsByTab('mastered', this)">✅ 마스터</button>
+        </div>
+      </div>
+
+      <div id="wordlist-items-container">
+        <!-- Rendered by JS -->
+      </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 4: Study Setup (학습 모드 선택) -->
+    <!-- ========================================== -->
+    <main id="study-setup-screen" class="screen">
+      <div class="flashcard-header">
+        <button class="btn-icon-subtle" onclick="App.goBack()">← 뒤로</button>
+        <h3 id="study-setup-title">학습 모드 선택</h3>
+        <div style="width:40px"></div>
+      </div>
+
+      <p id="study-setup-desc" class="text-muted-sm" style="margin-bottom:16px;"></p>
+
+      <div class="mode-cards-grid">
+        <div class="mode-card active" onclick="App.setStudyMode('flashcard', this)">
+          <div class="mode-icon">🃏</div>
+          <h4>3D 플래시카드</h4>
+          <p>Leitner 3단계 자가평가 & 자동 발음</p>
+        </div>
+        <div class="mode-card" onclick="App.setStudyMode('mcq', this)">
+          <div class="mode-icon">🎯</div>
+          <h4>4지선다 쾌속 퀴즈</h4>
+          <p>유사 오답 유도 선택지 & 콤보 점수</p>
+        </div>
+        <div class="mode-card" onclick="App.setStudyMode('spelling', this)">
+          <div class="mode-icon">✍️</div>
+          <h4>스펠링 마스터</h4>
+          <p>타이핑 훈련 & 음절 힌트</p>
+        </div>
+        <div class="mode-card" onclick="App.setStudyMode('match', this)">
+          <div class="mode-icon">⚡</div>
+          <h4>스피드 매칭 게임</h4>
+          <p>타임어택 단어-뜻 짝맞추기</p>
+        </div>
+        <div class="mode-card" onclick="App.setStudyMode('sentence', this)">
+          <div class="mode-icon">📝</div>
+          <h4>예문 빈칸 완성</h4>
+          <p>문맥 속 어휘 적용력 추론</p>
+        </div>
+        <div class="mode-card" onclick="App.setStudyMode('listening', this)">
+          <div class="mode-icon">🎧</div>
+          <h4>리스닝 딕테이션</h4>
+          <p>소리만 듣고 맞히는 청취 훈련</p>
+        </div>
+      </div>
+
+      <!-- Quiz Options -->
+      <div class="setup-options-group">
+        <h4>출제 방향</h4>
+        <div class="setup-btn-group">
+          <button class="direction-btn active" onclick="App.setQuizDirection('en-to-kr', this)">영어 ➡️ 한국어</button>
+          <button class="direction-btn" onclick="App.setQuizDirection('kr-to-en', this)">한국어 ➡️ 영어</button>
+        </div>
+      </div>
+
+      <div class="setup-options-group">
+        <h4>학습 문항 수</h4>
+        <div class="setup-btn-group">
+          <button class="count-chip-btn active" onclick="App.setQuizCount(10, this)">10개</button>
+          <button class="count-chip-btn" onclick="App.setQuizCount(20, this)">20개</button>
+          <button class="count-chip-btn" onclick="App.setQuizCount(30, this)">30개</button>
+          <button class="count-chip-btn" onclick="App.setQuizCount(100, this)">전체</button>
+        </div>
+      </div>
+
+      <button class="btn-primary" style="width:100%; margin-top:14px; font-size:1.05rem;" onclick="App.launchSelectedStudy()">
+        🚀 학습 시작하기!
+      </button>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 5: 3D Flashcard Arena -->
+    <!-- ========================================== -->
+    <main id="flashcard-screen" class="screen">
+      <div id="flashcard-container"></div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 6: Quiz Arena (5 Training Modes) -->
+    <!-- ========================================== -->
+    <main id="quiz-arena-screen" class="screen">
+      <div id="quiz-arena-container"></div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 7: Wrong Words Notebook (오답노트) -->
+    <!-- ========================================== -->
+    <main id="wrong-words-screen" class="screen">
+      <div class="section-title-row">
+        <h3>📝 스마트 오답노트</h3>
+        <span id="wrong-words-count" class="text-muted-sm">0개 오답</span>
+      </div>
+      <div id="wrong-words-container"></div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 8: Statistics & Badges (통계 & 배지) -->
+    <!-- ========================================== -->
+    <main id="stats-screen" class="screen">
+      <div class="section-title-row">
+        <h3>📊 학습 통계 & 성취 배지</h3>
+      </div>
+
+      <!-- Level Breakdown -->
+      <div class="setup-options-group" style="margin-bottom:18px;">
+        <h4 style="margin-bottom:12px;">📈 레벨별 어휘 마스터 현황</h4>
+        <div id="stats-level-breakdown"></div>
+      </div>
+
+      <!-- Badges Showcase -->
+      <div class="setup-options-group">
+        <h4 style="margin-bottom:12px;">🏆 도전과제 & 성취 배지 (12종)</h4>
+        <div class="badges-grid" id="stats-badges-grid"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== Bottom Navigation Bar ===== -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-home" onclick="App.goHome()">
+      <span class="nav-icon">🏠</span>
+      <span>홈</span>
+    </button>
+    <button class="nav-item" id="nav-curriculum" onclick="App.selectLevelCurriculum(1)">
+      <span class="nav-icon">📚</span>
+      <span>커리큘럼</span>
+    </button>
+    <button class="nav-item" id="nav-words" onclick="App.goToWordList()">
+      <span class="nav-icon">📖</span>
+      <span>단어사전</span>
+    </button>
+    <button class="nav-item" id="nav-wrong" onclick="App.goToWrongWords()">
+      <span class="nav-icon">📝</span>
+      <span>오답노트</span>
+    </button>
+    <button class="nav-item" id="nav-stats" onclick="App.goToStats()">
+      <span class="nav-icon">📊</span>
+      <span>통계/배지</span>
+    </button>
+  </nav>
+
+  <!-- ===== MODAL: Word Detail View ===== -->
+  <div id="word-detail-modal" class="modal-overlay" onclick="UI.closeWordDetailModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div id="word-detail-content"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Worksheet / Test Print Config ===== -->
+  <div id="print-setup-modal" class="modal-overlay" onclick="PrintManager.closePrintModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header-bar">
+        <h3>🖨️ A4 단어 시험지 및 단어장 인쇄</h3>
+        <button class="btn-modal-close" onclick="PrintManager.closePrintModal()">✕</button>
+      </div>
+      <div class="modal-body" id="print-config-area"></div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="PrintManager.closePrintModal()">취소</button>
+        <button class="btn-primary" onclick="PrintManager.generateAndPrint()">인쇄하기 (Print) →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Settings ===== -->
+  <div id="settings-modal" class="modal-overlay" onclick="App.closeSettingsModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header-bar">
+        <h3>⚙️ 환경 설정</h3>
+        <button class="btn-modal-close" onclick="App.closeSettingsModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" style="margin-bottom:14px;">
+          <label style="font-weight:700; font-size:0.88rem; display:block; margin-bottom:4px;">일일 목표 단어 수</label>
+          <input type="number" id="setting-daily-goal" class="form-input" style="width:100%; padding:10px; border:1px solid var(--border-color); border-radius:var(--radius-md);" value="20" min="5" max="100">
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px;">
+          <label style="font-weight:700; font-size:0.88rem; display:block; margin-bottom:4px;">TTS 원어민 발음 억양</label>
+          <select id="setting-voice-lang" style="width:100%; padding:10px; border:1px solid var(--border-color); border-radius:var(--radius-md); background:var(--bg-surface);">
+            <option value="en-US">미국식 영어 (US English)</option>
+            <option value="en-GB">영국식 영어 (UK English)</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
+          <span style="font-weight:700; font-size:0.88rem;">플래시카드 단어 자동 발음</span>
+          <input type="checkbox" id="setting-auto-speak" checked style="width:18px; height:18px;">
+        </div>
+
+        <div class="form-group" style="margin-bottom:20px; display:flex; align-items:center; justify-content:space-between;">
+          <span style="font-weight:700; font-size:0.88rem;">퀴즈 효과음 (Web Audio)</span>
+          <input type="checkbox" id="setting-sound-effects" checked style="width:18px; height:18px;">
+        </div>
+
+        <div style="border-top:1px solid var(--border-light); padding-top:14px;">
+          <button class="btn-outline-danger" style="width:100%;" onclick="App.resetAllUserData()">
+            ⚠️ 학습 진도 및 데이터 전체 초기화
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" onclick="App.saveSettings()">설정 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Add Custom Word ===== -->
+  <div id="add-word-modal" class="modal-overlay" onclick="App.closeAddWordModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header-bar">
+        <h3>➕ 나만의 단어 추가하기</h3>
+        <button class="btn-modal-close" onclick="App.closeAddWordModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom:12px;">
+          <label style="font-weight:700; font-size:0.85rem; display:block; margin-bottom:4px;">영단어 *</label>
+          <input type="text" id="custom-word-input" placeholder="예: serendipity" style="width:100%; padding:10px; border:1px solid var(--border-color); border-radius:var(--radius-md);">
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <label style="font-weight:700; font-size:0.85rem; display:block; margin-bottom:4px;">한국어 뜻 *</label>
+          <input type="text" id="custom-meaning-input" placeholder="예: 뜻밖의 행운, 우연한 발견" style="width:100%; padding:10px; border:1px solid var(--border-color); border-radius:var(--radius-md);">
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <label style="font-weight:700; font-size:0.85rem; display:block; margin-bottom:4px;">품사</label>
+          <select id="custom-pos-input" style="width:100%; padding:10px; border:1px solid var(--border-color); border-radius:var(--radius-md); background:var(--bg-surface);">
+            <option value="n">명사 (n)</option>
+            <option value="v">동사 (v)</option>
+            <option value="adj">형용사 (adj)</option>
+            <option value="adv">부사 (adv)</option>
+            <option value="prep">전치사 (prep)</option>
+            <option value="conj">접속사 (conj)</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <label style="font-weight:700; font-size:0.85rem; display:block; margin-bottom:4px;">예문 (선택)</label>
+          <input type="text" id="custom-example-input" placeholder="예: Finding this book was pure serendipity." style="width:100%; padding:10px; border:1px solid var(--border-color); border-radius:var(--radius-md);">
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <label style="font-weight:700; font-size:0.85rem; display:block; margin-bottom:4px;">예문 해석 (선택)</label>
+          <input type="text" id="custom-exmeaning-input" placeholder="예: 이 책을 발견한 것은 완전한 행운이었다." style="width:100%; padding:10px; border:1px solid var(--border-color); border-radius:var(--radius-md);">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="App.closeAddWordModal()">취소</button>
+        <button class="btn-primary" onclick="App.submitCustomWord()">단어 저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts (Ordered dependencies) -->
+  <!-- 1. Vocabulary Datasets -->
+  <script src="data/words_elementary.js"></script>
+  <script src="data/words_middle.js"></script>
+  <script src="data/words_high_basic.js"></script>
+  <script src="data/words_high_advanced.js"></script>
+
+  <!-- 2. Core Engines -->
+  <script src="js/sound.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/flashcard.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/print.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
