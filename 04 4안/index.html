@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A1부터 C1까지 40개 핵심 챕터와 네 가지 실전 훈련을 제공하는 영어 문법 학습기">
+  <title>📚 영문법 마스터 PRO 2.0 — CEFR A1~C1 스마트 문법 학습기</title>
+
+  <!-- Pretendard Web Font -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/grammar-components.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+  <!-- Confetti Canvas for Celebrations -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- A4 Printable Sheet Area (Used during window.print) -->
+  <div id="print-sheet-area"></div>
+
+  <!-- Main App Shell -->
+  <div class="app-container">
+    <!-- Top App Header -->
+    <header class="app-header">
+      <div class="app-logo" onclick="App.goHome()">
+        <div class="logo-badge">🏛️</div>
+        <div class="logo-text-group">
+          <h1>영문법 마스터 <span class="logo-version">PRO 2.0</span></h1>
+          <div class="logo-sub">CEFR A1 ~ C1 · 40개 핵심 챕터</div>
+        </div>
+      </div>
+      <div class="header-right-actions">
+        <button class="btn-icon-circle" onclick="App.goToSearch()" title="문법 검색">🔍</button>
+        <button class="btn-icon-circle" onclick="UI.toggleTheme()" title="테마 전환">
+          <span class="theme-toggle-icon">🌙</span>
+        </button>
+        <button class="btn-icon-circle" onclick="App.openSettingsModal()" title="환경 설정">⚙️</button>
+      </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 1: Dashboard (메인 홈 대시보드) -->
+    <!-- ========================================== -->
+    <main id="dashboard-screen" class="screen active">
+      <!-- Hero Banner -->
+      <div class="dash-hero-banner">
+        <div class="hero-greeting">
+          <h2>👋 원리로 이해하는 진짜 영문법!</h2>
+          <p>중학 내신 기본부터 수능 1등급 킬러 통사 구조까지</p>
+        </div>
+        <div class="hero-xp-pill">
+          <span id="dash-xp-level">Lv.1</span> · <span id="dash-xp-title">문법 초심자</span>
+        </div>
+      </div>
+
+      <!-- Daily Goal Card -->
+      <div class="dash-goal-card">
+        <div class="goal-header">
+          <span>🎯 오늘의 문법 훈련 목표</span>
+          <span id="dash-goal-text">0 / 5 학습 완료 (0%)</span>
+        </div>
+        <div class="goal-progress-bar">
+          <div class="goal-progress-fill" id="dash-goal-progress" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- 3-Stats Grid -->
+      <div class="dash-stats-grid">
+        <div class="stat-box" onclick="App.selectLevelCurriculum(1)">
+          <div class="stat-icon">📖</div>
+          <div class="stat-value" id="dash-total-chapters">40단원</div>
+          <div class="stat-label">전체 문법 챕터</div>
+        </div>
+        <div class="stat-box" onclick="App.goToStats()">
+          <div class="stat-icon">✨</div>
+          <div class="stat-value" id="dash-mastered-chapters">0단원 (0%)</div>
+          <div class="stat-label">완료 챕터</div>
+        </div>
+        <div class="stat-box" onclick="App.goToStats()">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" id="dash-streak-days">1일</div>
+          <div class="stat-label">연속 학습일</div>
+        </div>
+      </div>
+
+      <!-- Wrong Exercises Alert Banner (Dynamic) -->
+      <div id="dash-wrong-banner" class="dash-alert-banner wrong-theme" style="display:none;"></div>
+
+      <!-- Level Cards Section -->
+      <div class="section-title-row">
+        <h3>📚 단계별 영문법 커리큘럼 (A1 ~ C1)</h3>
+      </div>
+
+      <div class="level-cards-list" id="dash-level-cards">
+        <!-- Rendered by JS -->
+      </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 2: Curriculum Screen (레벨별 챕터 로드맵) -->
+    <!-- ========================================== -->
+    <main id="curriculum-screen" class="screen">
+      <div class="screen-top-nav-bar">
+        <button class="btn-screen-back" onclick="App.goBack()">← 홈 대시보드</button>
+        <span class="screen-top-title">문법 커리큘럼</span>
+        <div style="width:40px;"></div>
+      </div>
+      <div id="curriculum-header-area"></div>
+      <div class="curriculum-chapters-list" id="curriculum-chapters-list"></div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 3: Concept Lesson Screen (개념 강의) -->
+    <!-- ========================================== -->
+    <main id="lesson-screen" class="screen">
+      <div class="screen-top-nav-bar">
+        <button class="btn-screen-back" onclick="App.goBack()">← 뒤로가기</button>
+        <span class="screen-top-title">개념 강의 및 구조 분석</span>
+        <div style="width:40px;"></div>
+      </div>
+      <div id="lesson-container"></div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 4: Training Arena (4대 실전 훈련) -->
+    <!-- ========================================== -->
+    <main id="training-screen" class="screen">
+      <div id="training-arena-container"></div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 5: Grammar Search (문법 개념 검색) -->
+    <!-- ========================================== -->
+    <main id="search-screen" class="screen">
+      <div class="screen-top-nav-bar">
+        <button class="btn-screen-back" onclick="App.goBack()">← 뒤로가기</button>
+        <span class="screen-top-title">문법 개념 검색</span>
+        <div style="width:40px;"></div>
+      </div>
+
+      <div class="section-title-row">
+        <h3>🔍 스마트 문법 개념 검색</h3>
+        <span id="search-results-count" class="text-muted-sm">40개 챕터</span>
+      </div>
+
+      <div class="wordlist-controls-bar" style="margin-bottom:14px;">
+        <div class="search-input-wrap" style="position:relative; margin-bottom:10px;">
+          <input type="text" id="search-input" class="word-search-input" style="width:100%; padding:12px 14px; border:1px solid var(--border-color); border-radius:var(--radius-md); background:var(--bg-surface); color:var(--text-main);" placeholder="문법 공식, 개념(예: 가정법, 도치, 수동태, 분사)...">
+        </div>
+
+        <select id="search-level-filter" style="width:100%; padding:10px; border:1px solid var(--border-color); border-radius:var(--radius-md); background:var(--bg-surface); color:var(--text-main);">
+          <option value="all">전체 레벨 (A1 ~ C1)</option>
+          <option value="1">🌱 Level 1 · A1 초등 기초 & 중1 입문</option>
+          <option value="2">📗 Level 2 · A2 중학 기본</option>
+          <option value="3">📘 Level 3 · B1 중학 심화</option>
+          <option value="4">📙 Level 4 · B2 고등 빈출</option>
+          <option value="5">👑 Level 5 · C1 수능 킬러</option>
+        </select>
+      </div>
+
+      <div id="search-results-list" class="level-cards-list">
+        <!-- Rendered by JS -->
+      </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 6: Wrong Notebook (오답노트) -->
+    <!-- ========================================== -->
+    <main id="wrong-screen" class="screen">
+      <div class="screen-top-nav-bar">
+        <button class="btn-screen-back" onclick="App.goBack()">← 뒤로가기</button>
+        <span class="screen-top-title">스마트 오답노트</span>
+        <div style="width:40px;"></div>
+      </div>
+
+      <div class="section-title-row">
+        <h3>📝 취약 문법 집중 클리닉</h3>
+        <span id="wrong-screen-count" class="text-muted-sm">0개 취약 문항</span>
+      </div>
+      <div id="wrong-screen-container"></div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 7: Statistics & Badges (통계 & 배지) -->
+    <!-- ========================================== -->
+    <main id="stats-screen" class="screen">
+      <div class="screen-top-nav-bar">
+        <button class="btn-screen-back" onclick="App.goBack()">← 뒤로가기</button>
+        <span class="screen-top-title">학습 통계 & 성취 배지</span>
+        <div style="width:40px;"></div>
+      </div>
+
+      <!-- Level Breakdown -->
+      <div class="dash-goal-card" style="margin-bottom:18px;">
+        <h4 style="margin-bottom:12px; font-size:0.95rem;">📈 레벨별 문법 마스터 현황</h4>
+        <div id="stats-level-breakdown"></div>
+      </div>
+
+      <!-- Badges Showcase -->
+      <div class="dash-goal-card">
+        <h4 style="margin-bottom:12px; font-size:0.95rem;">🏆 도전과제 & 성취 배지 (12종)</h4>
+        <div class="badges-grid" id="stats-badges-grid" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px;"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== Bottom Navigation Bar ===== -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-home" onclick="App.goHome()">
+      <span class="nav-icon">🏠</span>
+      <span>홈</span>
+    </button>
+    <button class="nav-item" id="nav-curriculum" onclick="App.selectLevelCurriculum(1)">
+      <span class="nav-icon">📚</span>
+      <span>커리큘럼</span>
+    </button>
+    <button class="nav-item" id="nav-search" onclick="App.goToSearch()">
+      <span class="nav-icon">🔍</span>
+      <span>문법검색</span>
+    </button>
+    <button class="nav-item" id="nav-wrong" onclick="App.goToWrongScreen()">
+      <span class="nav-icon">📝</span>
+      <span>오답노트</span>
+    </button>
+    <button class="nav-item" id="nav-stats" onclick="App.goToStats()">
+      <span class="nav-icon">📊</span>
+      <span>통계/배지</span>
+    </button>
+  </nav>
+
+  <!-- ===== MODAL: Training Mode Setup ===== -->
+  <div id="training-setup-modal" class="modal-overlay" onclick="App.closeTrainingSetupModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header-bar">
+        <h3>🚀 실전 문법 훈련 모드 선택</h3>
+        <button class="btn-modal-close" onclick="App.closeTrainingSetupModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <h4 id="setup-chapter-title" style="margin-bottom:2px; font-size:1.05rem;"></h4>
+        <p id="setup-chapter-desc" class="text-muted-sm" style="margin-bottom:16px;"></p>
+
+        <div class="mode-cards-grid">
+          <div class="mode-card active" onclick="App.selectMode('mcq', this)">
+            <div class="mode-icon">🎯</div>
+            <h4>4지선다 어법</h4>
+            <p>수능/내신 빈출 어법 선택</p>
+          </div>
+          <div class="mode-card" onclick="App.selectMode('error', this)">
+            <div class="mode-icon">🔍</div>
+            <h4>오류 수정</h4>
+            <p>밑줄 친 어법 오류 찾기 & 교정</p>
+          </div>
+          <div class="mode-card" onclick="App.selectMode('unscramble', this)">
+            <div class="mode-icon">🧩</div>
+            <h4>조각 영작</h4>
+            <p>단어 조각 탭 배열 완성</p>
+          </div>
+          <div class="mode-card" onclick="App.selectMode('cloze', this)">
+            <div class="mode-icon">✍️</div>
+            <h4>어형 변형</h4>
+            <p>동사/준동사 형태 변형 빈칸</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="App.closeTrainingSetupModal()">취소</button>
+        <button class="btn-primary" onclick="App.launchTrainingFromModal()">훈련 시작하기 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: A4 Print Config ===== -->
+  <div id="print-modal" class="modal-overlay" onclick="PrintManager.closePrintModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header-bar">
+        <h3>🖨️ A4 실전 문법 시험지 및 해설지 인쇄</h3>
+        <button class="btn-modal-close" onclick="PrintManager.closePrintModal()">✕</button>
+      </div>
+      <div class="modal-body" id="print-config-area"></div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="PrintManager.closePrintModal()">취소</button>
+        <button class="btn-primary" onclick="PrintManager.generateAndPrint()">인쇄하기 (Print) →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Settings ===== -->
+  <div id="settings-modal" class="modal-overlay" onclick="App.closeSettingsModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header-bar">
+        <h3>⚙️ 환경 설정</h3>
+        <button class="btn-modal-close" onclick="App.closeSettingsModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" style="margin-bottom:14px;">
+          <label style="font-weight:700; font-size:0.88rem; display:block; margin-bottom:4px;">일일 훈련 목표 (문항 수)</label>
+          <input type="number" id="setting-daily-goal" style="width:100%; padding:10px; border:1px solid var(--border-color); border-radius:var(--radius-md); background:var(--bg-surface); color:var(--text-main);" value="5" min="1" max="50">
+        </div>
+
+        <div class="form-group" style="margin-bottom:20px; display:flex; align-items:center; justify-content:space-between;">
+          <span style="font-weight:700; font-size:0.88rem;">훈련 효과음 (Web Audio)</span>
+          <input type="checkbox" id="setting-sound" checked style="width:18px; height:18px;">
+        </div>
+
+        <div style="border-top:1px solid var(--border-light); padding-top:14px;">
+          <button class="btn-outline" style="width:100%; color:var(--danger); border-color:var(--danger);" onclick="App.resetAllData()">
+            ⚠️ 학습 진도 및 오답노트 전체 초기화
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" onclick="App.saveSettings()">설정 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script Includes in Order -->
+  <!-- 1. Grammar Datasets (A1, A2, B1, B2, C1) -->
+  <script src="data/grammar_a1.js"></script>
+  <script src="data/grammar_a2.js"></script>
+  <script src="data/grammar_b1.js"></script>
+  <script src="data/grammar_b2.js"></script>
+  <script src="data/grammar_c1.js"></script>
+
+  <!-- 2. Core Engines -->
+  <script src="js/sound.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/lesson.js"></script>
+  <script src="js/trainer.js"></script>
+  <script src="js/print.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

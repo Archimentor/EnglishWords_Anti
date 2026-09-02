@@ -1,0 +1,1004 @@
+/* ===== Grammar Component Styles (Lesson, Syntax Lab, Training Arena) ===== */
+
+/* Lesson Viewer Header Card */
+.lesson-header-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 22px 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.lesson-meta-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.badge-level {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  color: #fff;
+}
+
+.badge-level.level-1 { background: var(--lvl-a1); }
+.badge-level.level-2 { background: var(--lvl-a2); }
+.badge-level.level-3 { background: var(--lvl-b1); }
+.badge-level.level-4 { background: var(--lvl-b2); }
+.badge-level.level-5 { background: var(--lvl-c1); }
+
+.lesson-chapter-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.badge-completed {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--success-light);
+  color: var(--success);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.btn-bookmark-action {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-sub);
+  cursor: pointer;
+}
+
+.btn-bookmark-action.active {
+  background: #fef3c7;
+  color: #d97706;
+  border-color: #f59e0b;
+}
+
+.lesson-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.lesson-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+/* Metaphor Banner */
+.story-metaphor-banner {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 1.5px solid #bfdbfe;
+  color: #1e40af;
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+[data-theme="dark"] .story-metaphor-banner {
+  background: linear-gradient(135deg, #172554 0%, #1e3a8a 100%);
+  border-color: #1d4ed8;
+  color: #93c5fd;
+}
+
+.lesson-quick-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* In-Depth Lesson Card */
+.lesson-in-depth-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-main);
+}
+
+.lesson-in-depth-card h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.concept-breakdown-card {
+  background: var(--bg-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  margin: 14px 0;
+}
+
+.concept-breakdown-card h4 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.concept-breakdown-card ul {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+
+.concept-breakdown-card li {
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+/* Key Takeaways Card */
+.key-takeaways-card {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  border-radius: var(--radius-xl);
+  padding: 18px 22px;
+}
+
+[data-theme="dark"] .key-takeaways-card {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.takeaways-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #15803d;
+  margin-bottom: 10px;
+}
+
+[data-theme="dark"] .takeaways-title {
+  color: #4ade80;
+}
+
+.takeaways-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.takeaways-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.takeaway-bullet {
+  color: #16a34a;
+  font-weight: 800;
+}
+
+/* Self Check Cards */
+.self-checks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.self-check-card {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.15s ease;
+}
+
+.self-check-card:hover {
+  border-color: var(--primary);
+}
+
+.self-check-q {
+  padding: 14px 18px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-surface);
+}
+
+.self-check-arrow {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.self-check-a {
+  background: var(--bg-subtle);
+  border-top: 1px solid var(--border-color);
+  padding: 14px 18px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-sub);
+  animation: fadeIn 0.2s ease;
+}
+
+/* Lesson Sections */
+.lesson-section {
+  margin-bottom: 26px;
+}
+
+.lesson-section-heading {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.section-lead-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+/* ========================================================================= */
+/* Deep Detailed Formula Cards */
+/* ========================================================================= */
+.formulas-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.formula-card {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.formula-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.formula-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 12px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.formula-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.formula-pill-badge {
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.formula-main-title {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.formula-code-badge {
+  display: inline-block;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-family: monospace;
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--primary-glow);
+}
+
+/* Core Meaning Box */
+.formula-meaning-box {
+  background: var(--bg-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.formula-meaning-box h5 {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.formula-meaning-box p {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-sub);
+}
+
+/* Components Grid */
+.formula-components-wrap {
+  margin-bottom: 14px;
+}
+
+.formula-components-wrap h5 {
+  font-size: 0.88rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.components-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.component-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.component-part {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 2px;
+}
+
+.component-desc {
+  font-size: 0.78rem;
+  color: var(--text-sub);
+}
+
+/* Formula Tip Box */
+.formula-tip-box {
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+}
+
+[data-theme="dark"] .formula-tip-box {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.tip-tag {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #b45309;
+  display: block;
+  margin-bottom: 2px;
+}
+
+[data-theme="dark"] .tip-tag {
+  color: #fbbf24;
+}
+
+.tip-text {
+  font-size: 0.88rem;
+  color: var(--text-main);
+  line-height: 1.45;
+}
+
+/* Formula Examples Section */
+.formula-examples-section {
+  margin-bottom: 14px;
+}
+
+.formula-examples-section h5 {
+  font-size: 0.88rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.formula-examples-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formula-ex-card {
+  background: var(--bg-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+}
+
+.ex-en-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
+  flex-wrap: wrap;
+}
+
+.ex-idx {
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: var(--primary);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.ex-sentence {
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.ex-kr-row {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-left: 2px;
+  margin-bottom: 3px;
+}
+
+.ex-note-row {
+  font-size: 0.78rem;
+  color: var(--primary);
+  margin-left: 2px;
+}
+
+/* Formula Trap Card */
+.formula-trap-card {
+  background: var(--danger-light);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+/* Syntax Visualizer Chips */
+.syntax-examples-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.syntax-analysis-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+}
+
+.syntax-sentence-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.syntax-translation-row {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.syntax-tokens-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.syntax-token-chip {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-subtle);
+}
+
+.chip-text {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--text-main);
+}
+
+.chip-role-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+/* Role Colors */
+.role-S .chip-role-badge { color: #2563eb; }
+.role-V .chip-role-badge { color: #dc2626; }
+.role-O .chip-role-badge { color: #16a34a; }
+.role-IO .chip-role-badge { color: #0891b2; }
+.role-DO .chip-role-badge { color: #16a34a; }
+.role-C .chip-role-badge { color: #9333ea; }
+.role-M .chip-role-badge { color: #d97706; }
+
+/* Pitfall Notes */
+.pitfalls-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pitfall-alert-card {
+  background: var(--warning-light);
+  border: 1px solid var(--warning);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.pitfall-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.pitfall-content {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  line-height: 1.45;
+}
+
+.lesson-bottom-banner {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: #fff;
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.lesson-bottom-banner h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.lesson-bottom-banner p {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* ========================================================================= */
+/* Training Arena UI */
+/* ========================================================================= */
+.trainer-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.btn-icon-subtle {
+  background: none;
+  border: none;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.trainer-title-wrap {
+  text-align: center;
+}
+
+.trainer-chapter-tag {
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.trainer-progress-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.trainer-combo-pill {
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+}
+
+.trainer-combo-pill.active {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.trainer-progress-track {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-full);
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+
+.trainer-progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+  transition: width 0.25s ease;
+}
+
+.training-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 24px 22px;
+  box-shadow: var(--shadow-md);
+}
+
+.q-type-badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  margin-bottom: 12px;
+}
+
+.q-prompt-text {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.45;
+  margin-bottom: 18px;
+}
+
+.q-desc-sub {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+/* Mode 1: MCQ Options List */
+.mcq-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mcq-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.mcq-option-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.opt-num {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-full);
+  background: var(--bg-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.mcq-option-btn.correct {
+  border-color: var(--success);
+  background: var(--success-light);
+}
+
+.mcq-option-btn.correct .opt-num {
+  background: var(--success);
+  color: #fff;
+}
+
+.mcq-option-btn.wrong {
+  border-color: var(--danger);
+  background: var(--danger-light);
+}
+
+.mcq-option-btn.wrong .opt-num {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* Mode 2: Error Correction */
+.error-sentence-box {
+  background: var(--bg-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.error-target-underline {
+  border-bottom: 3px solid var(--danger);
+  color: var(--danger);
+  padding-bottom: 2px;
+}
+
+.error-input-row, .cloze-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.trainer-text-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  outline: none;
+}
+
+.trainer-text-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+/* Mode 3: Sentence Unscramble */
+.unscramble-prompt-kr {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 14px;
+}
+
+.unscramble-answer-slot {
+  min-height: 60px;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+  background: var(--bg-subtle);
+}
+
+.slot-placeholder {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.unscramble-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.unscramble-chip {
+  padding: 10px 16px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.unscramble-chip:hover {
+  transform: scale(1.05);
+  border-color: var(--primary);
+}
+
+.unscramble-chip.chosen {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.unscramble-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Mode 4: Cloze */
+.cloze-sentence-box {
+  background: var(--bg-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.cloze-blank-highlight {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Feedback Area */
+.trainer-feedback-area {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border-radius: var(--radius-lg);
+  animation: fadeIn 0.2s ease;
+}
+
+.trainer-feedback-area.correct {
+  background: var(--success-light);
+  border: 1.5px solid var(--success);
+}
+
+.trainer-feedback-area.wrong {
+  background: var(--danger-light);
+  border: 1.5px solid var(--danger);
+}
+
+.feedback-status-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.feedback-correct-answer {
+  font-size: 0.95rem;
+  color: var(--danger);
+  margin-bottom: 6px;
+}
+
+.feedback-explanation {
+  font-size: 0.88rem;
+  color: var(--text-sub);
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+
+/* Training Summary Card */
+.training-summary-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.summary-badge-hero {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.training-summary-card h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.summary-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.stat-pill {
+  background: var(--bg-subtle);
+  padding: 12px 8px;
+  border-radius: var(--radius-md);
+}
+
+.stat-num {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-top: 2px;
+}
+
+.summary-actions-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Mode Selection Cards (Modal) */
+.mode-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.mode-card {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px 14px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.mode-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+}
+
+.mode-card.active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.mode-icon {
+  font-size: 1.6rem;
+  margin-bottom: 4px;
+}
+
+.mode-card h4 {
+  font-size: 0.92rem;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+
+.mode-card p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
