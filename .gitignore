@@ -1,8 +1,8 @@
 01 1안/
 .gstack/
+.playwright-mcp/
 *.log
 *.png
 __pycache__/
 .DS_Store
 Thumbs.db
-

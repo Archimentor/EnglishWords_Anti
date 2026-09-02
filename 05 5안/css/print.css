@@ -1,0 +1,55 @@
+/* Printable chapter blueprint */
+@page { size: A4; margin: 14mm 15mm 16mm; }
+
+@media print {
+  :root { --ink: #102838; --paper-light: #fff; --paper: #fff; }
+  * { box-shadow: none !important; text-shadow: none !important; }
+  body { background: #fff !important; color: #000; font-size: 10pt; }
+  .site-header,
+  .studio-topbar,
+  .studio-progress,
+  .studio-sidebar,
+  .studio-inspector,
+  .station-nav,
+  .primary-action,
+  .text-action,
+  .repair-case > button,
+  .concept-check > button { display: none !important; }
+  #workspace,
+  .studio-view,
+  .studio-shell,
+  .studio-reader { display: block !important; min-height: 0 !important; background: #fff !important; }
+  .studio-reader::before {
+    content: "GRAMMAR BLUEPRINT · A1—C1 STRUCTURE STUDIO";
+    display: block;
+    margin-bottom: 7mm;
+    padding-bottom: 3mm;
+    border-bottom: 2pt solid #102838;
+    color: #0d678b;
+    font: 700 8pt/1.2 monospace;
+    letter-spacing: .08em;
+  }
+  .station-page { min-height: 0 !important; padding: 0 !important; animation: none !important; }
+  .station-page > h1 { margin-top: 4mm; font-size: 24pt; }
+  .essential-question,
+  .syntax-board,
+  .transfer-assignment { background: #fff !important; color: #000 !important; border: 1.5pt solid #102838; break-inside: avoid; }
+  .formula-workbench { grid-template-columns: 1fr; }
+  .formula-workbench > nav { display: none; }
+  .active-formula { padding: 5mm; }
+  .active-formula > code { background: #fff; color: #000; border: 1pt solid #102838; }
+  .formula-examples > section,
+  .repair-case,
+  .pitfall-ledger > div,
+  .concept-check,
+  .outcome-list li,
+  .takeaway-spec li { break-inside: avoid; }
+  .syntax-track button { color: #000; border-color: #333; }
+  .token-inspector { background: #fff; color: #000; border: 1pt solid #333; }
+  .token-inspector p,
+  .token-inspector i,
+  .transfer-assignment p { color: #333; }
+  .repair-case:not(.is-revealed) { display: none; }
+  .concept-check:not(.is-revealed) { display: none; }
+  .studio-completion { display: none; }
+}
