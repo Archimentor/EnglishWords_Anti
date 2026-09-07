@@ -67,7 +67,7 @@ const quickRecall = Engine.scheduleFromPerformance(firstGood, {
   hintUsed: false,
   phase: "meaning"
 }, now + Engine.DAY);
-assert.equal(quickRecall.lastRating, "easy", "빠르고 정확한 반복 회상은 자동으로 easy 근거가 되어야 합니다.");
+assert.equal(quickRecall.lastRating, "good", "응답 속도만으로 숙련도를 높이지 않습니다.");
 assert.ok(quickRecall.intervalDays > firstGood.intervalDays, "빠른 회상은 간격을 늘려야 합니다.");
 
 const hintedRecall = Engine.scheduleFromPerformance(fresh, {
@@ -82,8 +82,19 @@ const provisionalKnown = Engine.markKnown(fresh, { verified: false }, now);
 const verifiedKnown = Engine.markKnown(fresh, { verified: true, responseMs: 1500 }, now);
 assert.equal(provisionalKnown.confidence, "provisional");
 assert.equal(provisionalKnown.intervalDays, 21);
-assert.equal(verifiedKnown.confidence, "verified");
-assert.equal(verifiedKnown.intervalDays, 45);
+assert.equal(verifiedKnown.confidence, "checked");
+assert.equal(verifiedKnown.intervalDays, 7);
+assert.equal(verifiedKnown.spacedSuccesses, 0, "한 번의 표본 확인은 장기 기억 근거가 아닙니다.");
+const immediate = Engine.scheduleFromPerformance(firstGood, {correct:true, responseMs:500}, now + Engine.MINUTE);
+assert.equal(immediate.dueAt, firstGood.dueAt, "즉시 반복은 기한을 미루지 않습니다.");
+assert.equal(immediate.strength, firstGood.strength);
+assert.equal(immediate.spacedSuccesses, firstGood.spacedSuccesses);
+assert.equal(Engine.registerExposure(secondGood, now).dueAt, secondGood.dueAt, "읽기는 검증된 복습 일정을 지우지 않습니다.");
+assert.equal(Engine.clozeText({word:"cat", example:"A cat sleeps."}), "A _____ sleeps.");
+assert.equal(Engine.clozeText({word:"cat", example:"A category exists."}), null);
+assert.equal(Engine.clozeText({word:"cat", definitionEn:"an animal"}), null, "정의만으로 빈칸 문장을 만들지 않습니다.");
+assert.ok(hintedRecall.intervalDays <= 1);
+assert.equal(shortPlan.backlog, shortPlan.dueTotal - shortPlan.mix.review - shortPlan.mix.reinforce);
 
 const scanWords = Array.from({ length: 30 }, (_, index) => ({ id: `scan-${index + 1}` }));
 const scanProgress = {

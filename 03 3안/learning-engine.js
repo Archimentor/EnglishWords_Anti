@@ -50,6 +50,8 @@
       lastRating: null,
       confidence: "unseen",
       verifiedCount: 0,
+      spacedSuccesses: 0,
+      lastSuccessAt: null,
       averageResponseMs: 0,
       scanDeferredUntil: null,
       lastEvidence: null
@@ -84,7 +86,7 @@
       correct: Math.max(0, Number(raw.correct) || 0),
       wrong: Math.max(0, Number(raw.wrong) || 0),
       lapses: Math.max(0, Number(raw.lapses) || Number(raw.wrong) || 0),
-      repetitions: Math.max(0, Number(raw.repetitions) || Number(raw.seen) || 0),
+      repetitions: Math.max(0, Number(raw.repetitions ?? raw.seen) || 0),
       difficulty: clamp(Number(raw.difficulty) || 5, 1, 10),
       stability: Math.max(0, Number(raw.stability) || intervalDays),
       intervalDays,
@@ -97,6 +99,8 @@
       lastRating: raw.lastRating || null,
       confidence: raw.confidence || (raw.seen ? (legacyStrength >= 4 ? "verified" : "learning") : "unseen"),
       verifiedCount: Math.max(0, Number(raw.verifiedCount) || 0),
+      spacedSuccesses: Math.max(0, Number(raw.spacedSuccesses) || 0),
+      lastSuccessAt: asTime(raw.lastSuccessAt),
       averageResponseMs: Math.max(0, Number(raw.averageResponseMs) || 0),
       scanDeferredUntil: asTime(raw.scanDeferredUntil),
       lastEvidence: raw.lastEvidence || null
@@ -118,26 +122,27 @@
       stability = Math.max(0.04, previousInterval * 0.18);
       isCorrect = false;
     } else if (rating === "hard") {
-      intervalDays = progress.seen ? Math.max(0.25, previousInterval * 1.18) : 0.25;
+      intervalDays = Math.min(1, Math.max(0.25, previousInterval));
       difficulty = clamp(difficulty + 0.35, 1, 10);
       stability = intervalDays;
     } else if (rating === "easy") {
-      intervalDays = progress.seen
-        ? Math.max(4, previousInterval * previousEase * 1.45)
-        : 4;
+      intervalDays = progress.correct ? Math.max(1, previousInterval * previousEase) : 1;
       difficulty = clamp(difficulty - 0.45, 1, 10);
       stability = intervalDays;
     } else {
-      intervalDays = progress.seen
-        ? Math.max(1, previousInterval * previousEase)
-        : 1;
+      intervalDays = progress.correct ? Math.max(1, previousInterval * previousEase) : 1;
       difficulty = clamp(difficulty - 0.08, 1, 10);
       stability = intervalDays;
       rating = "good";
     }
 
     intervalDays = clamp(intervalDays, 10 / (24 * 60), 180);
-    const dueAt = now + (intervalDays * DAY);
+    const earlySuccess = isCorrect && rating !== "hard" && progress.correct > 0 && progress.dueAt > now;
+    const spaced = isCorrect && rating !== "hard" && !earlySuccess &&
+      (!progress.lastSuccessAt || now - progress.lastSuccessAt >= DAY);
+    const spacedSuccesses = isCorrect ? progress.spacedSuccesses + (spaced ? 1 : 0) : 0;
+    if (earlySuccess) { intervalDays = progress.intervalDays; stability = progress.stability; difficulty = progress.difficulty; }
+    const dueAt = earlySuccess ? progress.dueAt : now + intervalDays * DAY;
     return {
       ...progress,
       seen: progress.seen + 1,
@@ -148,8 +153,10 @@
       difficulty: Number(difficulty.toFixed(2)),
       stability: Number(stability.toFixed(4)),
       intervalDays: Number(intervalDays.toFixed(4)),
-      strength: strengthFromInterval(intervalDays, rating),
-      lastSeen: now,
+      strength: earlySuccess ? progress.strength : strengthFromInterval(intervalDays, rating),
+      spacedSuccesses,
+      lastSuccessAt: spaced ? now : progress.lastSuccessAt,
+      lastSeen: earlySuccess ? progress.lastSeen : now,
       dueAt,
       nextReview: dueAt,
       lastRating: rating,
@@ -167,8 +174,7 @@
     let rating = "good";
 
     if (!correct) rating = "again";
-    else if (hintUsed || responseMs > 8000) rating = "hard";
-    else if (responseMs > 0 && responseMs <= 2600 && progress.correct >= 1) rating = "easy";
+    else if (hintUsed) rating = "hard";
 
     const scheduled = scheduleReview(progress, rating, now);
     const answerCount = progress.correct + progress.wrong;
@@ -180,13 +186,15 @@
       ...scheduled,
       averageResponseMs,
       verifiedCount: progress.verifiedCount + (correct && !hintUsed ? 1 : 0),
-      confidence: !correct ? "fragile" : scheduled.strength >= 4 ? "verified" : "learning",
+      confidence: !correct ? "fragile" : scheduled.strength >= 4 && scheduled.spacedSuccesses >= 3 ? "verified" : "learning",
       lastEvidence: { correct, responseMs, hintUsed, phase, at: now }
     };
   }
 
   function registerExposure(rawProgress, now = Date.now()) {
     const progress = normalizeProgress(rawProgress, rawProgress?.wordId);
+    // Reading an explanation is not a failed recall and must not erase a review schedule.
+    if (progress.correct > 0) return { ...progress, seen: progress.seen + 1 };
     const intervalDays = 10 / (24 * 60);
     const dueAt = now + intervalDays * DAY;
     return {
@@ -209,7 +217,8 @@
   function markKnown(rawProgress, options = {}, now = Date.now()) {
     const progress = normalizeProgress(rawProgress, rawProgress?.wordId);
     const verified = Boolean(options.verified);
-    const intervalDays = verified ? 45 : 21;
+    if (progress.seen && progress.correct > 0) return progress;
+    const intervalDays = verified ? 7 : 21;
     const dueAt = now + intervalDays * DAY;
     return {
       ...progress,
@@ -219,12 +228,12 @@
       difficulty: clamp(progress.difficulty - (verified ? 0.8 : 0.35), 1, 10),
       stability: Math.max(progress.stability, intervalDays),
       intervalDays,
-      strength: verified ? 4 : 3,
+      strength: verified ? 2 : 1,
       lastSeen: now,
       dueAt,
       nextReview: dueAt,
       lastRating: verified ? "verified-known" : "provisional-known",
-      confidence: verified ? "verified" : "provisional",
+      confidence: verified ? "checked" : "provisional",
       verifiedCount: progress.verifiedCount + (verified ? 1 : 0),
       scanDeferredUntil: null,
       lastEvidence: { correct: verified ? true : null, responseMs: Number(options.responseMs) || 0, hintUsed: false, phase: verified ? "verification" : "batch-scan", at: now }
@@ -256,27 +265,27 @@
     return uniqueById(available).slice(0, Math.max(1, Number(size) || 24));
   }
 
-  function sampleForVerification(words = [], count = 3) {
+  function sampleForVerification(words = [], count = 3, random = Math.random) {
     const unique = uniqueById(words);
-    const targetCount = Math.min(unique.length, Math.max(0, Number(count) || 0));
-    if (!targetCount) return [];
-    if (targetCount === unique.length) return unique;
-    const selected = [];
-    const used = new Set();
-    for (let index = 0; index < targetCount; index += 1) {
-      let position = Math.floor(((index + 0.5) / targetCount) * unique.length);
-      while (used.has(position) && position < unique.length - 1) position += 1;
-      used.add(position);
-      selected.push(unique[position]);
+    for (let i = unique.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(random() * (i + 1));
+      [unique[i], unique[j]] = [unique[j], unique[i]];
     }
-    return selected;
+    return unique.slice(0, Math.max(0, Number(count) || 0));
+  }
+
+  function clozeText(word) {
+    if (!word?.example || !word.word) return null;
+    const escaped = word.word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const pattern = new RegExp("\\b" + escaped + "\\b", "gi");
+    return pattern.test(word.example) ? word.example.replace(pattern, "_____") : null;
   }
 
   function retrievability(rawProgress, now = Date.now()) {
     const progress = normalizeProgress(rawProgress, rawProgress?.wordId);
     if (!progress.seen || !progress.lastSeen || !progress.stability) return 0;
     const elapsedDays = Math.max(0, (now - progress.lastSeen) / DAY);
-    return clamp(Math.exp(-elapsedDays / Math.max(0.04, progress.stability)), 0, 1);
+    return clamp(Math.pow(0.9, elapsedDays / Math.max(0.04, progress.stability)), 0, 1);
   }
 
   function isDue(rawProgress, now = Date.now()) {
@@ -328,7 +337,7 @@
         return (aProgress.dueAt || 0) - (bProgress.dueAt || 0);
       });
 
-    const unseen = stageWords.filter(word => normalized(word).seen === 0);
+    const unseen = stageWords.filter(word => { const item = normalized(word); return item.seen === 0 && (!item.scanDeferredUntil || item.scanDeferredUntil <= now); });
 
     const accuracy = clamp(Number(recentAccuracy) || 0, 0, 100);
     let newTarget = preset.newBase;
@@ -358,7 +367,7 @@
       words: queue.map(item => item.word),
       mix,
       dueTotal: due.length,
-      backlog: Math.max(0, due.length - mix.review),
+      backlog: Math.max(0, due.length - dueItems.length),
       capacity: preset.capacity,
       estimatedMinutes,
       presetLabel: preset.label,
@@ -399,6 +408,7 @@
     deferScan,
     buildScanBatch,
     sampleForVerification,
+    clozeText,
     retrievability,
     isDue,
     reviewLabel,

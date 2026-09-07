@@ -22,6 +22,7 @@ const run = (relativePath) => {
   "data/grammar_b1.js",
   "data/grammar_b2.js",
   "data/grammar_c1.js",
+  "data/grammar_refinements.js",
   "data/grammar_guides.js",
   "js/data.js",
   "js/learning-engine.js"
@@ -59,15 +60,49 @@ assert.equal(new Set(exercises.map((exercise) => exercise.id)).size, exercises.l
 
 let progress = engine.createProgress();
 engine.STATIONS.forEach((station) => { progress = engine.visitStation(progress, station.id); });
-assert.equal(engine.stationCompletion(progress).complete, true, "6개 설계 단계를 모두 방문하면 스튜디오가 완료되어야 합니다.");
+assert.equal(engine.stationCompletion(progress).complete, false, "방문만으로 학습 완료를 판정하지 않습니다.");
+engine.STATIONS.forEach((station) => { progress = engine.completeStation(progress, station.id); });
+assert.equal(engine.stationCompletion(progress).complete, true, "읽기 완료를 명시한 절을 집계합니다.");
+assert.ok(progress.nextDue, "문제풀이 없이 읽기만 마쳐도 복습 일정이 생깁니다.");
 
 const now = Date.UTC(2026, 8, 2, 0, 0, 0);
 const repair = engine.scheduleSession(engine.createProgress(), { total: 5, correct: 2, hints: 0, averageResponseMs: 7000 }, now);
 assert.equal(repair.verdict, "repair");
 assert.equal(repair.intervalMs, 10 * engine.MINUTE, "불안정한 구조는 10분 뒤 다시 확인해야 합니다.");
-const growing = engine.scheduleSession(engine.createProgress(), { total: 5, correct: 5, hints: 0, averageResponseMs: 5000 }, now);
+const growing = engine.scheduleSession(engine.createProgress(), { total: 5, correct: 5, types: 4, hints: 0, averageResponseMs: 5000 }, now);
 assert.equal(growing.verdict, "growing");
-assert.ok(growing.intervalMs >= 3 * engine.DAY, "정확하고 빠른 수행은 더 긴 복습 간격을 받아야 합니다.");
+assert.equal(growing.intervalMs, engine.DAY, "첫 확인은 하루 뒤 복습합니다.");
+assert.equal(growing.progress.mastery, 1);
+const repeated = engine.scheduleSession(growing.progress, {total:5, correct:5, types:4}, now + engine.MINUTE);
+assert.equal(repeated.progress.mastery, 1, "같은 날 즉시 반복해서 숙련도를 부풀리지 않습니다.");
+assert.equal(repeated.nextDue, growing.nextDue);
+const recovered = engine.scheduleSession(repair.progress, {total:4, correct:4, types:4}, repair.nextDue);
+assert.ok(recovered.nextDue > repair.nextDue, "기한이 된 10분 재학습에 성공하면 과거 기한에 갇히지 않습니다.");
+assert.equal(recovered.progress.mastery, repair.progress.mastery, "같은 날 재학습은 숙련도만 부풀리지 않습니다.");
+const later = engine.scheduleSession(growing.progress, {total:5, correct:5, types:4}, now + engine.DAY);
+assert.equal(later.progress.mastery, 2);
+const single = engine.scheduleSession(engine.createProgress(), {total:1, correct:1, types:1}, now);
+assert.equal(single.progress.mastery, 0, "한 문제만으로 숙련을 판정하지 않습니다.");
+const hinted = engine.scheduleSession(growing.progress, {total:5, correct:5, types:4, hints:1}, now + engine.DAY);
+assert.ok(hinted.intervalMs <= engine.DAY);
+exercises.forEach(ex => {
+  assert.ok(engine.isAnswerCorrect(ex, ex.answer), ex.id + ": 대표 정답");
+  assert.equal(engine.isAnswerCorrect(ex, ""), false, ex.id + ": 빈 답안");
+  (ex.acceptedAnswers || []).forEach(answer => assert.ok(engine.isAnswerCorrect(ex, answer), ex.id + ": 대체 정답"));
+  if (ex.type === "choice") {
+    assert.equal(ex.options.length, new Set(ex.options).size, ex.id + ": 중복 선택지");
+    ex.options.forEach((_, index) => assert.equal(engine.isAnswerCorrect(ex, index), index === ex.answer));
+  }
+  if (ex.type === "arrange") {
+    const tokens = value => engine.normalizeAnswer(value).split(" ").sort().join("|");
+    assert.equal(tokens(ex.tokens.join(" ")), tokens(ex.answer), ex.id + ": 조립 토큰");
+  }
+});
+assert.ok(engine.isAnswerCorrect(exercises.find(ex => ex.id === "b1_13_c1"), "who"));
+assert.ok(engine.isAnswerCorrect(exercises.find(ex => ex.id === "c1_26_c1"), "accepting"));
+const advancedDue = {[chapters.at(-1).id]:{...growing.progress,nextDue:now-1}};
+assert.equal(engine.buildDailyPlan(chapters, advancedDue, "A1", 15, now).due.length, 1, "A1 선택이 이미 학습한 C1 복습을 숨기면 안 됩니다.");
+assert.equal(engine.buildReviewSession(chapters, {[chapters[0].id]:growing.progress}, 5, now).length, 0, "아직 기한이 아닌 약한 단원을 복습 기한으로 오인하지 않습니다.");
 
 const dueMap = {
   [chapters[0].id]: { ...repair.progress, nextDue: now - 1 },

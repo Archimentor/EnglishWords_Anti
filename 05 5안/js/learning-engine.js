@@ -21,6 +21,7 @@
   function createProgress() {
     return {
       visitedStations: [],
+      completedStations: [],
       lastStation: "brief",
       studioCompletedAt: null,
       sessions: 0,
@@ -41,6 +42,14 @@
     const next = { ...createProgress(), ...(progress || {}) };
     next.visitedStations = [...new Set(Array.isArray(next.visitedStations) ? next.visitedStations : [])]
       .filter((id) => STATIONS.some((station) => station.id === id));
+    next.completedStations = [...new Set(Array.isArray(next.completedStations) ? next.completedStations : [])]
+      .filter(id => STATIONS.some(station => station.id === id));
+    for (const key of ["sessions", "attempts", "correct", "mastery", "streak", "lapses", "hints", "averageResponseMs"]) {
+      next[key] = Math.max(0, Number(next[key]) || 0);
+    }
+    next.mastery = Math.min(5, next.mastery);
+    next.correct = Math.min(next.correct, next.attempts);
+    for (const key of ["lastSeen", "nextDue", "studioCompletedAt"]) next[key] = Number(next[key]) > 0 ? Number(next[key]) : null;
     return next;
   }
 
@@ -86,13 +95,12 @@
       level: chapter.levelCode,
       type: "correction",
       modeLabel: "오류 수리",
-      prompt: "밑줄 친 표현을 문법에 맞게 고치세요.",
+      prompt: item.instruction || "밑줄 친 표현을 문법에 맞게 고치세요.",
       source: item.originalSentence,
       answer: item.correctedWord,
-      acceptedAnswers: [
-        item.correctedWord,
-        String(item.originalSentence || "").replace(item.underlineTarget, item.correctedWord)
-      ]
+      acceptedAnswers: [item.correctedWord, ...(item.acceptedAnswers || [])].flatMap(answer => [
+        answer, String(item.originalSentence || "").replace(item.underlineTarget, answer)
+      ])
     }));
 
     (groups.unscramble || []).forEach((item) => result.push({
@@ -114,9 +122,9 @@
       level: chapter.levelCode,
       type: "input",
       modeLabel: "형태 변환",
-      prompt: item.sentence,
+      prompt: item.instruction ? item.instruction + "\n" + item.sentence : item.sentence,
       answer: item.answer,
-      acceptedAnswers: [item.answer]
+      acceptedAnswers: [item.answer, ...(item.acceptedAnswers || [])]
     }));
 
     return result;
@@ -124,7 +132,7 @@
 
   function isAnswerCorrect(exercise, response) {
     if (!exercise) return false;
-    if (exercise.type === "choice") return Number(response) === Number(exercise.answer);
+    if (exercise.type === "choice") return response !== null && response !== undefined && String(response).trim() !== "" && Number(response) === Number(exercise.answer);
     const accepted = exercise.acceptedAnswers?.length ? exercise.acceptedAnswers : [exercise.answer];
     const normalized = normalizeAnswer(response);
     return accepted.some((answer) => normalizeAnswer(answer) === normalized);
@@ -135,8 +143,16 @@
     if (!STATIONS.some((station) => station.id === stationId)) return next;
     next.visitedStations = [...new Set([...next.visitedStations, stationId])];
     next.lastStation = stationId;
-    if (STATIONS.every((station) => next.visitedStations.includes(station.id)) && !next.studioCompletedAt) {
-      next.studioCompletedAt = Date.now();
+    return next;
+  }
+
+  function completeStation(progress, stationId, now = Date.now()) {
+    const next = visitStation(progress, stationId);
+    if (!STATIONS.some(station => station.id === stationId)) return next;
+    next.completedStations = [...new Set([...next.completedStations, stationId])];
+    if (next.completedStations.length === STATIONS.length && !next.studioCompletedAt) {
+      next.studioCompletedAt = now;
+      if (!next.nextDue) next.nextDue = now + DAY;
     }
     return next;
   }
@@ -144,10 +160,10 @@
   function stationCompletion(progress) {
     const current = ensureProgress(progress);
     return {
-      visited: current.visitedStations.length,
+      visited: current.completedStations.length,
       total: STATIONS.length,
-      percent: Math.round((current.visitedStations.length / STATIONS.length) * 100),
-      complete: STATIONS.every((station) => current.visitedStations.includes(station.id))
+      percent: Math.round((current.completedStations.length / STATIONS.length) * 100),
+      complete: STATIONS.every((station) => current.completedStations.includes(station.id))
     };
   }
 
@@ -160,6 +176,10 @@
     const accuracy = correct / total;
     const hintRate = hints / total;
 
+    const previousDue = current.nextDue;
+    const previousSeen = current.lastSeen;
+    const spaced = !current.attempts || (previousDue <= now && now - previousSeen >= DAY);
+    const enoughEvidence = total >= 3 && Number(evidence?.types || 0) >= 2;
     current.sessions += 1;
     current.attempts += total;
     current.correct += correct;
@@ -175,27 +195,30 @@
       current.mastery = Math.max(0, current.mastery - 1);
       current.streak = 0;
       current.lapses += 1;
-    } else if (accuracy < 0.8 || hintRate > 0.34) {
-      current.mastery = Math.max(1, Math.min(4, current.mastery));
+    } else if (accuracy < 0.8 || hintRate > 0) {
+      current.mastery = Math.min(2, current.mastery);
       current.streak = 0;
-      intervalIndex = Math.min(1 + current.mastery, 2);
+      intervalIndex = 1;
       verdict = "reinforce";
     } else {
-      const fluent = responseMs > 0 && responseMs < 9000 && hintRate === 0;
-      current.mastery = Math.min(5, current.mastery + 1 + (fluent ? 1 : 0));
-      current.streak += 1;
-      intervalIndex = Math.min(current.mastery + (current.streak >= 3 ? 1 : 0), INTERVALS.length - 1);
+      if (enoughEvidence && spaced) {
+        current.mastery = Math.min(5, current.mastery + 1);
+        current.streak += 1;
+      }
+      intervalIndex = enoughEvidence ? Math.max(1, current.mastery) : 1;
       verdict = current.mastery >= 4 ? "stable" : "growing";
     }
 
-    current.nextDue = now + INTERVALS[intervalIndex];
+    const earlySuccess = accuracy >= 0.8 && hintRate === 0 && current.attempts > total && previousDue > now;
+    current.nextDue = earlySuccess ? (previousDue || now + DAY) : now + INTERVALS[intervalIndex];
+    if (earlySuccess) current.lastSeen = previousSeen;
     current.lastVerdict = verdict;
     return {
       progress: current,
       verdict,
       accuracy,
       nextDue: current.nextDue,
-      intervalMs: INTERVALS[intervalIndex]
+      intervalMs: Math.max(0, current.nextDue - now)
     };
   }
 
@@ -203,7 +226,7 @@
     return chapters
       .filter((chapter) => {
         const progress = ensureProgress(progressMap?.[chapter.id]);
-        return progress.attempts > 0 && progress.nextDue && progress.nextDue <= now;
+        return (progress.attempts > 0 || progress.studioCompletedAt) && progress.nextDue && progress.nextDue <= now;
       })
       .sort((a, b) => ensureProgress(progressMap[a.id]).nextDue - ensureProgress(progressMap[b.id]).nextDue);
   }
@@ -212,7 +235,7 @@
     const activeIndex = Math.max(0, LEVELS.indexOf(activeLevel));
     const allowed = LEVELS.slice(0, activeIndex + 1);
     const scoped = chapters.filter((chapter) => allowed.includes(chapter.levelCode));
-    const due = getDueChapters(scoped, progressMap, now);
+    const due = getDueChapters(chapters, progressMap, now);
     const atLevel = chapters.filter((chapter) => chapter.levelCode === activeLevel);
     const unfinished = atLevel.filter((chapter) => !stationCompletion(progressMap?.[chapter.id]).complete);
     const weak = scoped
@@ -221,7 +244,8 @@
         return progress.attempts > 0 && progress.mastery < 3 && !due.includes(chapter);
       })
       .sort((a, b) => ensureProgress(progressMap[a.id]).mastery - ensureProgress(progressMap[b.id]).mastery);
-    const focus = unfinished[0] || weak[0] || atLevel[0] || chapters[0];
+    const partial = unfinished.find(chapter => ensureProgress(progressMap?.[chapter.id]).visitedStations.length);
+    const focus = partial || unfinished[0] || weak[0] || atLevel[0] || chapters[0];
     const queueLimit = goalMinutes <= 10 ? 2 : goalMinutes <= 15 ? 3 : 4;
     const queue = [];
     [...due, focus, ...weak, ...unfinished].forEach((chapter) => {
@@ -232,24 +256,18 @@
 
   function buildReviewSession(chapters, progressMap, count = 8, now = Date.now(), random = Math.random) {
     const due = getDueChapters(chapters, progressMap, now);
-    const weak = chapters
-      .filter((chapter) => {
-        const progress = ensureProgress(progressMap?.[chapter.id]);
-        return progress.attempts > 0 && progress.mastery < 4 && !due.includes(chapter);
-      })
-      .sort((a, b) => ensureProgress(progressMap[a.id]).mastery - ensureProgress(progressMap[b.id]).mastery);
-    const pool = [...due, ...weak];
-    if (!pool.length) return [];
-
-    const exercisesByChapter = new Map(pool.map((chapter) => [chapter.id, shuffle(flattenExercises(chapter), random)]));
+    // One whole chapter provides multiple retrieval types; one lucky answer is not mastery.
+    const pool = due.filter(chapter => ensureProgress(progressMap?.[chapter.id]).attempts > 0)
+      .slice(0, Math.max(1, Math.floor(count / 4)));
     const result = [];
-    let round = 0;
-    while (result.length < count && round < count * 3) {
-      const chapter = pool[round % pool.length];
-      const exercises = exercisesByChapter.get(chapter.id) || [];
-      const next = exercises.shift();
-      if (next) result.push(next);
-      round += 1;
+    for (const chapter of pool) {
+      const exercises = shuffle(flattenExercises(chapter), random);
+      const selected = [];
+      for (const type of ["choice", "correction", "arrange", "input"]) {
+        const exercise = exercises.find(item => item.type === type);
+        if (exercise) selected.push(exercise);
+      }
+      result.push(...selected);
     }
     return result;
   }
@@ -316,6 +334,7 @@
     flattenExercises,
     isAnswerCorrect,
     visitStation,
+    completeStation,
     stationCompletion,
     scheduleSession,
     getDueChapters,

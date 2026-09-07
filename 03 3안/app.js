@@ -3,6 +3,7 @@
 
   const Engine = window.WORDLINE_ENGINE;
   const STORAGE_KEY = "wordline-v3-cefr-progress";
+  const WORD_BY_ID = new Map(WORDLINE_WORDS.map(word => [String(word.id), word]));
   const SESSION_OPTIONS = [5, 10, 15];
   const CHALLENGE_MODES = ["meaning", "reverse", "context", "listening", "spelling"];
   const SCAN_SIZE_BY_MINUTES = Object.freeze({ 5: 16, 10: 24, 15: 32 });
@@ -63,6 +64,8 @@
       sessions: [],
       scanHistory: [],
       scannedKnown: 0,
+      pendingWords: [],
+      pendingSession: null,
       discoveredUnknown: 0
     };
   }
@@ -75,7 +78,7 @@
       : "a1";
     const migratedProgress = {};
     Object.entries(stored.progress || {}).forEach(([wordId, progress]) => {
-      migratedProgress[wordId] = Engine.normalizeProgress(progress, wordId);
+      if (findWord(wordId)) migratedProgress[wordId] = Engine.normalizeProgress(progress, wordId);
     });
 
     if (stored.version === 3 || stored.version === 4) {
@@ -83,12 +86,19 @@
         ...base,
         ...stored,
         currentStage: knownStage,
+        xp: Math.max(0, Number(stored.xp) || 0),
+        streak: Math.max(0, Number(stored.streak) || 0),
+        bestStreak: Math.max(0, Number(stored.bestStreak) || 0),
         sessionMinutes: SESSION_OPTIONS.includes(stored.sessionMinutes) ? stored.sessionMinutes : 10,
         progress: migratedProgress,
         bookmarks: Array.isArray(stored.bookmarks) ? stored.bookmarks : [],
         badges: Array.isArray(stored.badges) ? stored.badges : [],
-        daily: stored.daily || {},
-        sessions: Array.isArray(stored.sessions) ? stored.sessions : [],
+        daily: Object.fromEntries(Object.entries(stored.daily || {}).filter(([date, value]) => /^\d{4}-\d{2}-\d{2}$/.test(date) && value && typeof value === "object").map(([date, value]) => [date, {
+          ...Object.fromEntries(["words","correct","attempts","sessions"].map(key => [key, Math.max(0, Number(value[key]) || 0)])),
+          wordIds: Array.isArray(value.wordIds) ? value.wordIds : []
+        }])),
+        pendingWords: Array.isArray(stored.pendingWords) ? stored.pendingWords.filter(id => findWord(id)) : [],
+        sessions: Array.isArray(stored.sessions) ? stored.sessions.filter(item => item && typeof item === "object").map(item => ({...item, count:Number(item.count)||0, correct:Number(item.correct)||0})) : [],
         scanHistory: Array.isArray(stored.scanHistory) ? stored.scanHistory : [],
         scannedKnown: Math.max(0, Number(stored.scannedKnown) || 0),
         discoveredUnknown: Math.max(0, Number(stored.discoveredUnknown) || 0)
@@ -113,7 +123,7 @@
 
   function loadState() {
     try {
-      return migrateState(JSON.parse(localStorage.getItem(STORAGE_KEY)));
+      return migrateState(JSON.parse(window.LearningData.read(STORAGE_KEY)));
     } catch (error) {
       return defaultState();
     }
@@ -123,7 +133,7 @@
 
   function saveState() {
     state.version = 4;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    window.LearningData.write(STORAGE_KEY, JSON.stringify(state));
     updateHeader();
   }
 
@@ -196,7 +206,7 @@
   }
 
   function findWord(wordId) {
-    return WORDLINE_WORDS.find(word => String(word.id) === String(wordId));
+    return WORD_BY_ID.get(String(wordId));
   }
 
   function getProgress(wordId) {
@@ -204,7 +214,8 @@
   }
 
   function isMastered(word) {
-    return getProgress(word.id).strength >= 4;
+    const progress = getProgress(word.id);
+    return progress.strength >= 4 && progress.spacedSuccesses >= 3;
   }
 
   function stageStats(stage) {
@@ -220,7 +231,7 @@
   }
 
   function overallStats() {
-    const progressValues = Object.values(state.progress).map(progress => Engine.normalizeProgress(progress, progress.wordId));
+    const progressValues = WORDLINE_WORDS.filter(word => state.progress[word.id]).map(word => getProgress(word.id));
     const seen = progressValues.filter(progress => progress.seen > 0).length;
     const mastered = WORDLINE_WORDS.filter(isMastered).length;
     const answers = progressValues.reduce((sum, item) => sum + item.correct + item.wrong, 0);
@@ -474,6 +485,7 @@
   }
 
   function setView(view) {
+    checkpointSession();
     currentView = view;
     placementSession = null;
     scanSession = null;
@@ -486,7 +498,8 @@
   }
 
   function render() {
-    if (currentView === "studio") {
+    if (currentView === "onboarding") renderOnboarding();
+    else if (currentView === "studio") {
       if (state.onboardingComplete) renderStudio();
       else renderOnboarding();
     } else if (currentView === "placement") renderPlacement();
@@ -511,7 +524,7 @@
             <button class="primary-action dark" type="button" data-action="start-placement">45초 범위 스캔</button>
             <button class="secondary-action" type="button" data-action="start-a1">A1 레이더부터 시작</button>
           </div>
-          <p class="onboarding-note">스캔 결과는 출발점만 정합니다. 실제 정답과 반응 속도로 계속 보정됩니다.</p>
+          <p class="onboarding-note">스캔 결과는 출발점만 정합니다. 실제 정답과 간격을 둔 복습으로 계속 보정됩니다.</p>
         </div>
         <div class="scan-hero" aria-label="단어 스캔 학습 흐름">
           <div class="scan-hero-copy"><span>01 SCAN</span><strong>모르는 단어만<br>손으로 잡기</strong></div>
@@ -525,7 +538,11 @@
   }
 
   function createOptions(target, labelKey = "meaning", poolWords = getStageWords(target.stageId)) {
-    const pool = shuffle(poolWords.filter(word => word.id !== target.id && word[labelKey] !== target[labelKey]));
+    const labels = new Set([target[labelKey]]);
+    const pool = shuffle(poolWords).filter(word => {
+      if (word.id === target.id || labels.has(word[labelKey]) || (labelKey === "word" && word.meaning === target.meaning)) return false;
+      labels.add(word[labelKey]); return true;
+    });
     return shuffle([target, ...pool.slice(0, 3)]).map(word => ({
       id: String(word.id),
       label: word[labelKey]
@@ -713,7 +730,8 @@
       size: getScanSize()
     });
     if (!words.length) {
-      showToast(`${stage.name}에서 새로 훑을 단어가 없습니다.`);
+      setView("studio");
+      showToast(`${stage.name}에서 지금 새로 훑을 단어가 없습니다. 예약된 복습이나 다른 레벨을 선택하세요.`);
       return;
     }
     scanSession = {
@@ -913,8 +931,9 @@
     saveState();
 
     if (learningWords.length) {
+      state.pendingWords = [...new Set([...state.pendingWords, ...learningWords.map(word => String(word.id))])];
       const carriedSummary = summary;
-      startStudy(learningWords.map(word => ({ word, kind: "new" })), { mission: true, scanSummary: carriedSummary });
+      startStudy(learningWords.slice(0, Engine.SESSION_PRESETS[state.sessionMinutes].capacity).map(word => ({ word, kind: "new" })), { mission: true, scanSummary: carriedSummary });
       return;
     }
     scanSession.phase = "outcome";
@@ -976,7 +995,7 @@
           <p class="rail-caption">전체 목록을 다 풀지 않습니다.<br>각 구간의 모르는 단어만 남깁니다.</p>
           <div class="path-list">${renderPath(stage)}</div>
           <div class="syllabus-total">
-            <div><span>검증된 장기 기억</span><strong>${formatNumber(overall.mastered)}</strong></div>
+            <div><span>간격 복습으로 확인</span><strong>${formatNumber(overall.mastered)}</strong></div>
             <div class="thin-progress"><span style="width:${(overall.mastered / overall.total) * 100}%"></span></div>
           </div>
         </aside>
@@ -1018,7 +1037,7 @@
             <i>→</i>
             <div><span>03</span><strong>빈틈 학습</strong><small>고른 것과 틀린 것만</small></div>
             <i>→</i>
-            <div><span>04</span><strong>자동 간격</strong><small>정답·속도·힌트로 배정</small></div>
+            <div><span>04</span><strong>자동 간격</strong><small>정답·힌트·복습 이력로 배정</small></div>
           </div>
 
           <div class="lesson-actions">
@@ -1133,7 +1152,7 @@
           <article class="flashcard ${studySession.revealed ? "is-revealed" : ""}" id="flashcard">
             <span class="card-label">${escapeHTML(word.stageName)} / ${escapeHTML(word.unitTitle)}</span>
             <button class="speak-button" type="button" data-action="speak" data-word="${escapeHTML(word.word)}" aria-label="${escapeHTML(word.word)} 발음 듣기">◖))</button>
-            <div class="card-memory-label"><span>${retention === null ? "첫 만남" : `기억 ${retention}%`}</span><i>${Engine.reviewLabel(memory)}</i></div>
+            <div class="card-memory-label"><span>${retention === null ? "첫 만남" : `추정 ${retention}%`}</span><i>${Engine.reviewLabel(memory)}</i></div>
             <h1 class="study-word">${escapeHTML(word.word)}</h1>
             <p class="phonetic">${word.ipa ? `${escapeHTML(word.ipa)} · ` : ""}${escapeHTML(word.pos)}</p>
             <div class="reveal-area">
@@ -1153,7 +1172,7 @@
             <div><span>SELF-RATING REMOVED</span><strong>여기서는 이해만 하고, 다음 회상 문제로 실제 기억을 판정합니다.</strong></div>
             <button class="primary-action dark" type="button" data-action="continue-learning">${studySession.index === studySession.items.length - 1 ? "회상으로 증명하기" : "다음 빈틈"}</button>
           </div>
-          <p class="keyboard-hint">Enter · 다음 &nbsp;&nbsp; 선택 난이도 없이 정답·속도·힌트로 자동 조절</p>
+          <p class="keyboard-hint">Enter · 다음 &nbsp;&nbsp; 선택 난이도 없이 정답·힌트·복습 이력로 자동 조절</p>
         ` : `<p class="keyboard-hint">Space · 문맥과 뜻 보기 &nbsp;&nbsp; S · 발음 듣기</p>`}
       </section>
     `;
@@ -1168,6 +1187,7 @@
     if (!studySession || !studySession.revealed) return;
     const item = studySession.items[studySession.index];
     const word = item.word;
+    state.pendingWords = state.pendingWords.filter(id => String(id) !== String(word.id));
     const scheduled = recordExposure(word, item.kind);
     studySession.answers.push({ word, rating: "exposure", correct: null, dueAt: scheduled.dueAt });
     announce(`${word.word}, 학습 후보에 추가`);
@@ -1192,17 +1212,13 @@
   }
 
   function clozeMarkup(word) {
-    const sentence = word.example || word.definitionEn || `${word.word} is the target word.`;
-    const match = new RegExp(`\\b${escapeRegExp(word.word)}\\b`, "i").exec(sentence);
-    if (!match) return `<mark>_____</mark> — ${escapeHTML(sentence)}`;
-    const before = sentence.slice(0, match.index);
-    const after = sentence.slice(match.index + match[0].length);
-    return `${escapeHTML(before)}<mark>_____</mark>${escapeHTML(after)}`;
+    return escapeHTML(Engine.clozeText(word) || "").replaceAll("_____", "<mark>_____</mark>");
   }
 
   function createChallengeQuestion(target, index) {
     let mode = CHALLENGE_MODES[index % CHALLENGE_MODES.length];
-    if (mode === "context" && !wordContext(target)) mode = "meaning";
+    if (mode === "context" && !Engine.clozeText(target)) mode = "reverse";
+    if (mode === "listening" && !("speechSynthesis" in window)) mode = "reverse";
     const labelKey = mode === "meaning" ? "meaning" : "word";
     return {
       target,
@@ -1223,8 +1239,8 @@
       showToast("도전 문제를 만들 단어가 없습니다.");
       return;
     }
-    const questionCount = Math.min(unique.length, state.sessionMinutes === 5 ? 3 : state.sessionMinutes === 15 ? 6 : 5);
-    const targets = shuffle(unique).slice(0, questionCount);
+    const questionCount = options.kind && options.kind !== "quick" ? unique.length : Math.min(unique.length, state.sessionMinutes === 5 ? 3 : state.sessionMinutes === 15 ? 6 : 5);
+    const targets = (options.reviewMode ? unique : shuffle(unique)).slice(0, questionCount);
     quizSession = {
       kind: options.kind || "quick",
       reviewMode: Boolean(options.reviewMode),
@@ -1254,7 +1270,7 @@
       return `<p>문맥의 빈칸을 완성하세요.</p><h2 class="context-question">${clozeMarkup(word)}</h2>`;
     }
     if (question.mode === "listening") {
-      return `<p>소리를 듣고 단어를 고르세요.</p><button class="listen-orb" type="button" data-action="speak" data-word="${escapeHTML(word.word)}"><span>◖))</span><small>PLAY WORD</small></button>`;
+      return `<p>소리를 듣고 단어를 고르세요.</p><button class="listen-orb" type="button" data-action="speak" data-word="${escapeHTML(word.word)}"><span>◖))</span><small>PLAY WORD</small></button><button class="text-button" type="button" data-action="listening-fallback">소리가 안 들려요 · 뜻 문제로 바꾸기</button>`;
     }
     if (question.mode === "spelling") {
       return `<p>뜻을 보고 영어 철자를 완성하세요.</p><h2>${escapeHTML(word.meaning)}</h2>`;
@@ -1424,7 +1440,7 @@
         <p class="eyebrow">PROOF COMPLETE / SCHEDULED AUTOMATICALLY</p>
         <div class="result-orbit"><div class="result-score">${resultSession.score}<small>RECALL / 100</small></div></div>
         <h1>${title}</h1>
-        <p>${resultSession.mistakes.length ? `${resultSession.mistakes.length}개 단어는 10분 복습 대기열로 보냈습니다.` : "정답, 응답 속도, 힌트 사용 기록으로 다음 복습 시점을 자동 배정했습니다."}</p>
+        <p>${resultSession.mistakes.length ? `${resultSession.mistakes.length}개 단어는 10분 복습 대기열로 보냈습니다.` : "정답과 힌트 사용, 간격을 둔 복습 기록으로 다음 복습 시점을 자동 배정했습니다."}</p>
         <div class="result-metrics">
           <span><small>평균 응답</small><strong>${resultSession.averageResponseMs ? `${(resultSession.averageResponseMs / 1000).toFixed(1)}초` : "–"}</strong></span>
           <span><small>최고 연속 회상</small><strong>×${resultSession.maxCombo}</strong></span>
@@ -1438,7 +1454,8 @@
         </div>
         <div class="result-actions">
           ${resultSession.mistakes.length ? `<button class="secondary-action" type="button" data-action="repeat-mistakes">헷갈린 단어만 다시</button>` : ""}
-          ${resultSession.scanSummary ? `<button class="primary-action dark" type="button" data-action="scan-next-batch">다음 묶음 훑기</button>` : `<button class="primary-action dark" type="button" data-action="finish-result">학습실로 돌아가기</button>`}
+          ${state.pendingWords.length ? `<button class="primary-action dark" type="button" data-action="continue-pending">남은 빈틈 ${state.pendingWords.length}개 이어가기</button>` : resultSession.scanSummary ? `<button class="primary-action dark" type="button" data-action="scan-next-batch">다음 묶음 훑기</button>` : ""}
+          <button class="secondary-action" type="button" data-action="finish-result">학습실로 돌아가기</button>
         </div>
       </section>
     `;
@@ -1551,11 +1568,11 @@
       <section class="wide-view view-enter">
         <header class="view-heading">
           <div><p class="eyebrow">MEMORY RECORD</p><h1>외운 양보다<br><em>다시 떠올릴 시점</em>을 봅니다.</h1></div>
-          <p>기억 유지율은 마지막 학습 시점과 단어별 안정도로 계산합니다. 틀린 단어는 10분 뒤, 쉬운 단어는 더 먼 간격으로 이동합니다.</p>
+          <p>기억 추정치는 복습 일정을 위한 단순 계산값이며 실제 기억력을 측정한 확률이 아닙니다. 틀리면 10분 뒤, 힌트를 쓰면 하루 이내 다시 확인합니다. 장기 기억은 날짜를 달리한 회상 성공이 3회 이상 쌓여야 집계합니다.</p>
         </header>
         <div class="report-grid">
           <div class="report-primary">
-            <div class="report-title-row"><div><p class="eyebrow">LONG-TERM MEMORY</p><h2 class="big-number">${formatNumber(stats.mastered)}<small>/ ${formatNumber(stats.total)} 단어</small></h2></div><div class="report-retention"><strong>${averageRetention() || "–"}<small>%</small></strong><span>현재 기억 유지율</span></div></div>
+            <div class="report-title-row"><div><p class="eyebrow">LONG-TERM MEMORY</p><h2 class="big-number">${formatNumber(stats.mastered)}<small>/ ${formatNumber(stats.total)} 단어</small></h2></div><div class="report-retention"><strong>${averageRetention() || "–"}<small>%</small></strong><span>현재 기억 추정치</span></div></div>
             <div class="mastery-bar"><span class="mastered" style="width:${masteryPercent}%"></span><span class="learning" style="width:${learningPercent}%"></span></div>
             <div class="legend"><span class="mastered-key">장기 기억 ${formatNumber(stats.mastered)}</span><span class="learning-key">학습 중 ${formatNumber(stats.learning)}</span><span>아직 만나지 않음 ${formatNumber(stats.total - stats.seen)}</span></div>
             <h3 class="week-title">이번 주 학습 리듬</h3>
@@ -1602,11 +1619,13 @@
       <p class="dialog-meaning">${escapeHTML(word.meaning)}</p>
       <p class="dialog-example">${escapeHTML(wordContext(word))}</p>
       <p class="dialog-example-kr">${word.exampleMeaning ? escapeHTML(word.exampleMeaning) : word.example ? "문맥 속 용례" : "영어 사전식 풀이"}</p>
-      <div class="word-memory-readout"><span><small>기억 유지율</small><strong>${progress.seen ? `${Math.round(Engine.retrievability(progress) * 100)}%` : "첫 학습 전"}</strong></span><span><small>다음 복습</small><strong>${Engine.reviewLabel(progress)}</strong></span></div>
+      <div class="word-memory-readout"><span><small>기억 추정치</small><strong>${progress.seen ? `${Math.round(Engine.retrievability(progress) * 100)}%` : "첫 학습 전"}</strong></span><span><small>다음 복습</small><strong>${Engine.reviewLabel(progress)}</strong></span></div>
       <div class="dialog-actions">
         <button class="text-button" type="button" data-dialog-action="speak" data-word="${escapeHTML(word.word)}">발음 듣기</button>
         <button class="text-button" type="button" data-dialog-action="bookmark" data-word-id="${escapeHTML(word.id)}">${bookmarked ? "★ 북마크 해제" : "☆ 북마크"}</button>
-        <button class="text-button" type="button" data-dialog-action="mark-known" data-word-id="${escapeHTML(word.id)}">이미 아는 단어</button>
+        <button class="text-button" type="button" data-dialog-action="learn" data-word-id="${escapeHTML(word.id)}">이 단어 학습</button>
+        <button class="text-button" type="button" data-dialog-action="recall" data-word-id="${escapeHTML(word.id)}">회상 확인</button>
+        <button class="text-button" type="button" data-dialog-action="mark-known" data-word-id="${escapeHTML(word.id)}">아는 단어 · 나중에 확인</button>
       </div>
       <div style="margin-top:24px">${strengthMarkup(progress.strength)}</div>
     `;
@@ -1690,6 +1709,7 @@
   document.getElementById("reset-progress").addEventListener("click", () => {
     const confirmed = window.confirm("진단 결과, 기억 간격, 경험치와 학습 기록을 모두 지울까요? 이 작업은 되돌릴 수 없습니다.");
     if (!confirmed) return;
+    placementSession = scanSession = studySession = quizSession = resultSession = null;
     state = defaultState();
     saveState();
     closeDialog(settingsDialog);
@@ -1713,8 +1733,14 @@
       saveState();
       openWordDialog(word.id);
       if (currentView === "archive") refreshArchiveList();
+    } else if (["learn", "recall"].includes(button.dataset.dialogAction)) {
+      closeDialog(wordDialog);
+      state.onboardingComplete = true;
+      if (button.dataset.dialogAction === "learn") startStudy([word]);
+      else startChallenge([word], {kind:"study"});
     } else if (button.dataset.dialogAction === "mark-known") {
-      recordReview(word, "easy", "archive");
+      state.progress[word.id] = Engine.markKnown(getProgress(word.id), { verified: false });
+      saveState();
       openWordDialog(word.id);
       showToast(`다음 복습: ${Engine.reviewLabel(getProgress(word.id))}`);
       if (currentView === "archive") refreshArchiveList();
@@ -1722,6 +1748,7 @@
   });
 
   workspace.addEventListener("input", event => {
+    if (event.target.id === "spelling-answer" && quizSession) { quizSession.questions[quizSession.index].typedValue = event.target.value; checkpointSession(); return; }
     if (event.target.id !== "word-search") return;
     archiveQuery = event.target.value;
     archiveLimit = 60;
@@ -1739,9 +1766,15 @@
     const actionButton = event.target.closest("[data-action]");
     if (actionButton) {
       const action = actionButton.dataset.action;
-      if (action === "start-placement") startPlacement();
+      if (action === "resume-session") resumeSession();
+      else if (action === "continue-pending") startStudy(state.pendingWords.map(findWord).filter(Boolean).slice(0, Engine.SESSION_PRESETS[state.sessionMinutes].capacity).map(word => ({word,kind:"new"})), {mission:true});
+      else if (action === "listening-fallback" && quizSession) {
+        const question = quizSession.questions[quizSession.index];
+        if (question.correct === null) { question.mode = "reverse"; question.startedAt = Date.now(); renderChallenge(); }
+      }
+      else if (action === "start-placement") startPlacement();
       else if (action === "retry-placement") startPlacement();
-      else if (action === "cancel-placement") renderOnboarding();
+      else if (action === "cancel-placement") setView("onboarding");
       else if (action === "placement-toggle") {
         const id = String(actionButton.dataset.wordId);
         if (placementSession.selectedIds.has(id)) placementSession.selectedIds.delete(id);
@@ -1755,6 +1788,7 @@
         state.currentStage = placementSession.resultStage.id;
         state.placement = { score: placementSession.score, stageId: placementSession.resultStage.id, completedAt: Date.now() };
         state.onboardingComplete = true;
+        state.pendingSession = null;
         addXP(30);
         saveState();
         placementSession = null;
@@ -1762,6 +1796,8 @@
         renderStudio();
       }
       else if (action === "start-a1") {
+        placementSession = null;
+        state.pendingSession = null;
         state.currentStage = "a1";
         state.onboardingComplete = true;
         saveState();
@@ -1860,7 +1896,9 @@
   document.addEventListener("keydown", event => {
     const activeTag = document.activeElement?.tagName;
     const isTyping = ["INPUT", "TEXTAREA", "SELECT"].includes(activeTag);
-    if (wordDialog.open || settingsDialog.open) return;
+    if (wordDialog.open || settingsDialog.open || event.repeat || event.isComposing) return;
+    if (["BUTTON", "A"].includes(activeTag) && ["Enter", " "].includes(event.key)) return;
+    if (!isTyping && ["Enter", " "].includes(event.key)) event.preventDefault();
 
     if (currentView === "study" && studySession && !isTyping) {
       if (event.code === "Space" && !studySession.revealed) {
@@ -1879,7 +1917,7 @@
       else if (placementSession.phase === "verify") {
         const question = placementSession.questions[placementSession.index];
         const numeric = Number(event.key);
-        if (question.selectedId === null && numeric >= 1 && numeric <= 4) answerPlacement(question.options[numeric - 1].id);
+        if (question.selectedId === null && numeric >= 1 && numeric <= question.options.length) answerPlacement(question.options[numeric - 1].id);
         else if (question.selectedId !== null && event.key === "Enter") nextPlacement();
       }
     }
@@ -1905,6 +1943,70 @@
     }
   });
 
+  let importing = false;
+  let syncingHistory = false;
+  function checkpointSession() {
+    if (importing) return;
+    const sessions = {placement:placementSession, scan:scanSession, study:studySession, challenge:quizSession};
+    const active = sessions[currentView];
+    if (active) state.pendingSession = JSON.parse(JSON.stringify({view:currentView, session:active}, (_, value) => value instanceof Set ? {setValues:[...value]} : value));
+    if (currentView === "result" || (currentView === "scan" && scanSession?.phase === "outcome")) state.pendingSession = null;
+    window.LearningData.write(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function resumeSession() {
+    const pending = state.pendingSession;
+    if (!pending || !["placement","scan","study","challenge"].includes(pending.view)) return false;
+    try {
+      const session = JSON.parse(JSON.stringify(pending.session), (_, value) => value && Array.isArray(value.setValues) ? new Set(value.setValues) : value);
+      const items = session.items || session.questions || session.words;
+      if (!Array.isArray(items) || (pending.view === "study" && !session.items[session.index]) || (pending.view === "challenge" && !session.questions[session.index])) throw Error("Invalid saved session");
+      placementSession = scanSession = studySession = quizSession = null;
+      if (pending.view === "placement") placementSession = session;
+      if (pending.view === "scan") scanSession = session;
+      if (pending.view === "study") studySession = session;
+      if (pending.view === "challenge") { quizSession = session; session.questions[session.index].startedAt = Date.now(); }
+      currentView = pending.view;
+      render();
+      return true;
+    } catch (_) {
+      state.pendingSession = null; currentView = state.onboardingComplete ? "studio" : "onboarding";
+      window.LearningData.warn(); return false;
+    }
+  }
+
+  function decorateSession() {
+    if (["studio","archive","report","onboarding"].includes(currentView) && !workspace.querySelector(".resume-session-banner")) {
+      const pending = state.pendingSession;
+      if (pending || state.pendingWords.length) workspace.insertAdjacentHTML("afterbegin",
+        '<section class="resume-session-banner"><p><b>' + (pending ? "멈춘 학습을 이어가세요." : "골라 둔 빈틈 " + state.pendingWords.length + "개가 남았습니다.") +
+        '</b><small>선택한 단어, 답안과 다음 순서를 이 브라우저에 저장합니다.</small></p><button type="button" data-action="' +
+        (pending ? "resume-session" : "continue-pending") + '">이어서 학습</button></section>');
+    }
+    checkpointSession();
+    const hash = "#" + currentView;
+    if (!syncingHistory && location.hash !== hash) history.pushState({view:currentView}, "", hash);
+  }
+  new MutationObserver(decorateSession).observe(workspace, {childList:true});
+  document.addEventListener("click", checkpointSession);
+  document.addEventListener("keydown", checkpointSession);
+  window.addEventListener("learning-data-imported", () => { importing = true; });
+  window.addEventListener("pagehide", checkpointSession);
+  window.addEventListener("popstate", () => {
+    checkpointSession();
+    syncingHistory = true;
+    const view = location.hash.slice(1);
+    if (state.pendingSession?.view === view) resumeSession();
+    else setView(["studio","archive","report","onboarding"].includes(view) ? view : "studio");
+    syncingHistory = false;
+  });
+  window.LearningData.mount({dialog:settingsDialog, key:STORAGE_KEY, getState:() => { checkpointSession(); return state; },
+    validate:value => Boolean(value && [3,4].includes(value.version) && value.progress && typeof value.progress === "object" && !Array.isArray(value.progress) && Array.isArray(value.bookmarks) && Array.isArray(value.sessions))
+  });
+  if (state.lastActiveDate && ![dateKey(), yesterdayKey()].includes(state.lastActiveDate)) state.streak = 0;
+  const initialView = location.hash.slice(1);
+  if (["archive", "report"].includes(initialView)) currentView = initialView;
+  if (state.pendingSession?.view === initialView && resumeSession()) return;
   updateHeader();
   updateNavigation();
   saveState();

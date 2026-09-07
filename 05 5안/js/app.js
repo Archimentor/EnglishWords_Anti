@@ -33,7 +33,8 @@
       drafts: {},
       attemptLog: [],
       lastStudyDate: null,
-      streak: 0
+      streak: 0,
+      pendingPractice: null
     };
   }
 
@@ -47,7 +48,7 @@
 
   function migrateLegacy(base) {
     if (base.migrationComplete) return base;
-    const legacy = safeParse(localStorage.getItem(LEGACY_OPTION5_KEY), null);
+    const legacy = safeParse(window.LearningData.read(LEGACY_OPTION5_KEY), null);
     if (!legacy) {
       return { ...base, migrationComplete: true };
     }
@@ -64,7 +65,7 @@
 
   function loadState() {
     const base = defaultState();
-    const saved = safeParse(localStorage.getItem(STORAGE_KEY), null);
+    const saved = safeParse(window.LearningData.read(STORAGE_KEY), null);
     const merged = saved ? {
       ...base,
       ...saved,
@@ -73,21 +74,41 @@
       attemptLog: Array.isArray(saved.attemptLog) ? saved.attemptLog.slice(-MAX_ATTEMPT_LOG) : []
     } : base;
     const migrated = migrateLegacy(merged);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
-    } catch (_error) {
-      // The app remains usable in private modes where storage is unavailable.
-    }
+    migrated.activeLevel = engine.LEVELS.includes(migrated.activeLevel) ? migrated.activeLevel : "A1";
+    migrated.goalMinutes = [10, 15, 25].includes(migrated.goalMinutes) ? migrated.goalMinutes : 15;
+    migrated.streak = Math.max(0, Number(migrated.streak) || 0);
+    migrated.progress = Object.fromEntries(Object.entries(migrated.progress).filter(([id]) => data.getChapter(id)).map(([id, value]) => [id, engine.ensureProgress(value)]));
+    migrated.drafts = Object.fromEntries(Object.entries(migrated.drafts).filter(([id]) => data.getChapter(id)).map(([id, value]) => [id, String(value).slice(0, 1200)]));
+    migrated.attemptLog = migrated.attemptLog.filter(item => item && data.getChapter(item.chapterId));
+    if (migrated.lastStudyDate && (new Date(localDateKey()) - new Date(migrated.lastStudyDate)) / engine.DAY > 1) migrated.streak = 0;
     return migrated;
   }
 
+  function checkpointPractice() {
+    if (practiceSession) state.pendingPractice = JSON.parse(JSON.stringify(practiceSession));
+  }
+
   function saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (_error) {
-      // Progress persistence is best-effort; learning content still works.
-    }
+    checkpointPractice();
+    window.LearningData.write(STORAGE_KEY, JSON.stringify(state));
     updateHeader();
+  }
+
+  function resumePractice() {
+    const pending = state.pendingPractice;
+    if (!pending || !Array.isArray(pending.items) || !pending.items.length || !pending.items[pending.index] || !pending.itemState || !pending.baseProgress || !Array.isArray(pending.responses)) return false;
+    if (!pending.items.every(item => data.getChapter(item.chapterId) && engine.flattenExercises(data.getChapter(item.chapterId)).some(ex => ex.id === item.id))) return false;
+    practiceSession = JSON.parse(JSON.stringify(pending));
+    practiceSession.itemState.startedAt = Date.now();
+    studioSession = null;
+    currentView = "practice";
+    if (location.hash !== "#practice") history.pushState({view:"practice"}, "", "#practice");
+    render();
+    return true;
+  }
+
+  function totalAttempts() {
+    return Object.values(state.progress).reduce((sum, value) => sum + engine.ensureProgress(value).attempts, 0);
   }
 
   function getProgress(chapterId) {
@@ -166,9 +187,9 @@
   }
 
   function overallAccuracy() {
-    if (!state.attemptLog.length) return 0;
-    const correct = state.attemptLog.filter((attempt) => attempt.correct).length;
-    return Math.round((correct / state.attemptLog.length) * 100);
+    const total = totalAttempts();
+    const correct = Object.values(state.progress).reduce((sum, value) => sum + engine.ensureProgress(value).correct, 0);
+    return total ? Math.round(correct / total * 100) : 0;
   }
 
   function updateHeader() {
@@ -184,15 +205,23 @@
   function routeTo(view, options = {}) {
     const { push = true } = options;
     if (!state.onboarded && view !== "onboarding") view = "onboarding";
+    checkpointPractice();
     currentView = view;
     if (view !== "studio") studioSession = null;
     if (view !== "practice") practiceSession = null;
     if (view !== "result") resultSession = null;
-    if (push) history.pushState({ view }, "", view === "onboarding" ? "#start" : `#${view}`);
+    if (push && location.hash !== `#${view}`) history.pushState({ view }, "", view === "onboarding" ? "#start" : `#${view}`);
     render();
   }
 
+  let lastRenderKey = "";
   function render() {
+    const key = currentView + (studioSession ? studioSession.chapter.id + ":" + studioSession.stationIndex : "") + (practiceSession ? practiceSession.index : "");
+    const sameScreen = key === lastRenderKey;
+    const scroll = window.scrollY;
+    const active = document.activeElement;
+    const focusId = active?.id;
+    const focusSelector = active?.dataset.action ? "[data-action='" + active.dataset.action + "']" + ["index","token"].filter(key => active.dataset[key] != null).map(key => "[data-" + key + "='" + active.dataset[key] + "']").join("") : null;
     const renderer = {
       onboarding: renderOnboarding,
       today: renderToday,
@@ -204,8 +233,18 @@
       result: renderResult
     }[currentView] || renderToday;
     workspace.innerHTML = renderer();
+    if (state.pendingPractice && !["practice","result","onboarding"].includes(currentView)) {
+      workspace.insertAdjacentHTML("afterbegin", '<section class="resume-session-banner"><p><b>잠시 멈춘 확인 연습이 있습니다.</b><small>답안과 복습 일정은 이미 저장했습니다. 남은 문장을 이어갈 수 있습니다.</small></p><button type="button" data-action="resume-practice">연습 이어가기</button></section>');
+    }
     updateHeader();
-    window.scrollTo({ top: 0, behavior: "auto" });
+    checkpointPractice();
+    window.LearningData.write(STORAGE_KEY, JSON.stringify(state));
+    lastRenderKey = key;
+    if (sameScreen) {
+      const target = (focusId && document.getElementById(focusId)) || (focusSelector && workspace.querySelector(focusSelector));
+      target?.focus({preventScroll:true});
+    }
+    window.scrollTo({ top: sameScreen ? scroll : 0, behavior: "auto" });
   }
 
   function renderOnboarding() {
@@ -224,7 +263,7 @@
           <dl class="method-ledger">
             <div><dt>01</dt><dd><b>읽기만 하지 않습니다</b><span>문장 성분을 눌러 구조와 역할을 직접 확인합니다.</span></dd></div>
             <div><dt>02</dt><dd><b>문제부터 풀지 않습니다</b><span>6개 설계 단계를 마친 뒤에 수행을 확인합니다.</span></dd></div>
-            <div><dt>03</dt><dd><b>한 번의 정답을 믿지 않습니다</b><span>정확도·힌트·속도로 다음 복습을 예약합니다.</span></dd></div>
+            <div><dt>03</dt><dd><b>한 번의 정답을 믿지 않습니다</b><span>정확도·힌트·간격을 둔 회상으로 다음 복습을 예약합니다.</span></dd></div>
           </dl>
         </div>
 
@@ -254,7 +293,7 @@
     const focus = plan.focus;
     const progress = getProgress(focus.id);
     const station = engine.stationCompletion(progress);
-    const nextStation = engine.STATIONS.find((item) => !progress.visitedStations.includes(item.id)) || engine.STATIONS.at(-1);
+    const nextStation = engine.STATIONS.find((item) => !progress.completedStations.includes(item.id)) || engine.STATIONS.at(-1);
     const formula = focus.formulas?.[0];
     const duePreview = plan.due.slice(0, 3);
     return `
@@ -274,7 +313,7 @@
             </div>
             <footer class="mission-footer">
               <button class="primary-action" type="button" data-action="start-studio" data-chapter="${focus.id}">${station.visited ? "설계 이어가기" : "스튜디오 입장"}</button>
-              <span>다음 단계 ${String(station.visited + 1).padStart(2, "0")} / ${station.total}</span>
+              <span>다음 단계 ${String(Math.min(station.total, station.visited + 1)).padStart(2, "0")} / ${station.total}</span>
             </footer>
           </article>
 
@@ -289,7 +328,7 @@
             </ol>
             <div class="due-callout ${plan.due.length ? "has-due" : ""}">
               <div><span>${plan.due.length}</span><p><b>복습할 구조</b><small>${plan.due.length ? "기억이 흐려지기 전에 먼저 확인합니다." : "현재 밀린 복습이 없습니다."}</small></p></div>
-              <button type="button" data-action="start-review" ${plan.due.length || state.attemptLog.length ? "" : "disabled"}>복습 시작</button>
+              <button type="button" data-action="start-review" ${plan.due.length ? "" : "disabled"}>복습 시작</button>
             </div>
           </aside>
         </div>
@@ -302,7 +341,7 @@
         <section class="evidence-strip">
           <div><span>완료한 설계</span><b>${completedStudioCount()}<small>/40</small></b></div>
           <div><span>안정된 구조</span><b>${stableChapterCount()}<small>/40</small></b></div>
-          <div><span>누적 수행</span><b>${state.attemptLog.length}<small>문장</small></b></div>
+          <div><span>누적 수행</span><b>${totalAttempts()}<small>문장</small></b></div>
           <div><span>연속 학습</span><b>${state.streak}<small>일</small></b></div>
         </section>
 
@@ -363,12 +402,12 @@
     return `
       <section class="review-view">
         <header class="page-heading">
-          <div><p class="micro-label">SPACED REPAIR QUEUE</p><h1>복습 큐</h1><p>정확도, 힌트 사용, 응답 속도를 근거로 필요한 구조만 다시 꺼냅니다.</p></div>
+          <div><p class="micro-label">SPACED REPAIR QUEUE</p><h1>복습 큐</h1><p>정확도, 힌트 사용, 날짜가 다른 복습 이력을 근거로 필요한 구조만 다시 꺼냅니다.</p></div>
           <div class="queue-total"><b>${candidates.due.length}</b><span>지금 복습</span></div>
         </header>
 
         <section class="review-launch">
-          <div><span>ACTIVE SESSION</span><h2>${readyItems.length ? `${readyItems.length}개 문장으로 기억을 다시 세웁니다.` : "아직 복습할 수행 기록이 없습니다."}</h2><p>${readyItems.length ? "같은 문제 유형만 반복하지 않고 판별·수리·조립·변환을 섞습니다." : "한 단원의 6개 설계 단계를 마치고 확인 연습을 완료하면 복습 일정이 생성됩니다."}</p></div>
+          <div><span>ACTIVE SESSION</span><h2>${readyItems.length ? `${readyItems.length}개 문장으로 기억을 다시 세웁니다.` : "지금 기한이 된 확인 연습이 없습니다."}</h2><p>${readyItems.length ? "같은 문제 유형만 반복하지 않고 판별·수리·조립·변환을 섞습니다." : "개념 읽기만 마쳐도 다음 날 다시 읽을 일정이 생깁니다. 아래 단원을 눌러 읽기 복습하거나, 예정된 확인 연습 날짜에 돌아오세요."}</p></div>
           <button class="primary-action" type="button" data-action="start-review" ${readyItems.length ? "" : "disabled"}>복습 세션 시작</button>
         </section>
 
@@ -397,14 +436,14 @@
         <section class="record-summary">
           <div><span>설계 완료</span><b>${completedStudioCount()}<small>/40</small></b></div>
           <div><span>안정 구조</span><b>${stableChapterCount()}<small>/40</small></b></div>
-          <div><span>수행 문장</span><b>${state.attemptLog.length}<small>개</small></b></div>
+          <div><span>수행 문장</span><b>${totalAttempts()}<small>개</small></b></div>
           <div><span>연속 학습</span><b>${state.streak}<small>일</small></b></div>
         </section>
 
         <section class="level-evidence"><header><p class="micro-label">LEVEL EVIDENCE</p><h2>레벨별 구조 안정도</h2></header>${data.LEVEL_META.map((level) => { const item = summary[level.id]; return `<div class="level-evidence-row"><span>${level.id}</span><div><b>${escapeHTML(level.name)}</b><small>${item.studioComplete}/${item.total} 설계 완료 · ${item.stable}개 안정</small></div><i><u style="width:${item.averageMastery}%"></u></i><strong>${item.averageMastery}%</strong></div>`; }).join("")}</section>
 
         <div class="record-columns">
-          <section class="weakness-ledger"><header><p class="micro-label">ERROR PATTERN</p><h2>오류가 남은 작업</h2></header>${weakness.length ? weakness.map(([mode, count]) => `<div><b>${escapeHTML(mode)}</b><span>${count}회 오류</span><i style="width:${Math.min(100, count * 14)}%"></i></div>`).join("") : `<div class="empty-inline">아직 기록된 오류가 없습니다.</div>`}</section>
+          <section class="weakness-ledger"><header><p class="micro-label">ERROR PATTERN</p><h2>오류가 남은 작업 · 최근 240회</h2></header>${weakness.length ? weakness.map(([mode, count]) => `<div><b>${escapeHTML(mode)}</b><span>${count}회 오류</span><i style="width:${Math.min(100, count * 14)}%"></i></div>`).join("") : `<div class="empty-inline">아직 기록된 오류가 없습니다.</div>`}</section>
           <section class="attempt-ledger"><header><p class="micro-label">RECENT ATTEMPTS</p><h2>최근 수행</h2></header>${recent.length ? recent.map((attempt) => `<div class="${attempt.correct ? "is-correct" : "is-wrong"}"><span>${attempt.correct ? "PASS" : "REPAIR"}</span><p><b>${escapeHTML(attempt.chapterTitle)}</b><small>${escapeHTML(attempt.modeLabel)} · ${new Date(attempt.at).toLocaleDateString("ko-KR")}</small></p></div>`).join("") : `<div class="empty-inline">확인 연습을 완료하면 수행 기록이 남습니다.</div>`}</section>
         </div>
       </section>`;
@@ -412,7 +451,9 @@
 
   function beginStudio(chapterId, options = {}) {
     const chapter = data.getChapter(chapterId);
-    if (!chapter) return;
+    if (!chapter) { routeTo("today", {push:false}); return; }
+    checkpointPractice();
+    practiceSession = null;
     const progress = getProgress(chapterId);
     let stationIndex = engine.STATIONS.findIndex((station) => station.id === progress.lastStation);
     if (stationIndex < 0) stationIndex = 0;
@@ -435,11 +476,8 @@
   function selectStudioStation(index) {
     if (!studioSession) return;
     const progress = getProgress(studioSession.chapter.id);
-    const visitedIndexes = progress.visitedStations.map((id) => engine.STATIONS.findIndex((station) => station.id === id));
-    const maxVisited = Math.max(0, ...visitedIndexes);
-    const unlocked = Math.min(engine.STATIONS.length - 1, maxVisited + 1);
     const nextIndex = Math.max(0, Math.min(engine.STATIONS.length - 1, Number(index)));
-    if (nextIndex > unlocked) return;
+    // All concept sections are freely browsable; completion is explicitly acknowledged.
     studioSession.stationIndex = nextIndex;
     studioSession.formulaIndex = 0;
     studioSession.tokenIndex = 0;
@@ -450,9 +488,7 @@
   }
 
   function studioRailHTML(chapter, progress) {
-    const visitedIndexes = progress.visitedStations.map((id) => engine.STATIONS.findIndex((station) => station.id === id));
-    const unlocked = Math.min(engine.STATIONS.length - 1, Math.max(0, ...visitedIndexes) + 1);
-    return `<nav class="studio-rail" aria-label="설계 단계">${engine.STATIONS.map((station, index) => `<button type="button" data-action="select-station" data-index="${index}" ${index > unlocked ? "disabled" : ""} class="${index === studioSession.stationIndex ? "is-active" : ""} ${progress.visitedStations.includes(station.id) ? "is-visited" : ""}" aria-current="${index === studioSession.stationIndex ? "step" : "false"}"><span>${String(index + 1).padStart(2, "0")}</span><div><b>${escapeHTML(station.label)}</b><small>${escapeHTML(station.short)}</small></div><i>${progress.visitedStations.includes(station.id) ? "✓" : ""}</i></button>`).join("")}</nav>`;
+    return `<nav class="studio-rail" aria-label="설계 단계">${engine.STATIONS.map((station, index) => `<button type="button" data-action="select-station" data-index="${index}"  class="${index === studioSession.stationIndex ? "is-active" : ""} ${progress.completedStations.includes(station.id) ? "is-visited" : ""}" aria-current="${index === studioSession.stationIndex ? "step" : "false"}"><span>${String(index + 1).padStart(2, "0")}</span><div><b>${escapeHTML(station.label)}</b><small>${escapeHTML(station.short)}</small></div><i>${progress.completedStations.includes(station.id) ? "✓" : ""}</i></button>`).join("")}</nav>`;
   }
 
   function renderBriefStation(chapter) {
@@ -547,7 +583,7 @@
 
   function renderTransferStation(chapter, progress) {
     const completion = engine.stationCompletion(progress);
-    const missing = engine.STATIONS.filter((station) => !progress.visitedStations.includes(station.id));
+    const missing = engine.STATIONS.filter((station) => !progress.completedStations.includes(station.id));
     return `
       <article class="station-page transfer-station">
         <p class="station-code">05 / TRANSFER</p>
@@ -557,7 +593,7 @@
         <section class="takeaway-spec"><header><span>ACCEPTANCE CRITERIA</span><h2>문장이 만족해야 할 핵심 조건</h2></header><ol>${(chapter.keyTakeaways || []).map((item, index) => `<li><span>${String(index + 1).padStart(2, "0")}</span><p>${escapeHTML(item)}</p></li>`).join("")}</ol></section>
         <section class="studio-completion ${completion.complete ? "is-ready" : ""}">
           ${completion.complete
-            ? `<div><span>6/6</span><p><b>설계 단계를 모두 통과했습니다.</b><small>이제 판별·수리·조립·변환으로 실제 수행을 확인합니다.</small></p></div><button class="primary-action" type="button" data-action="start-chapter-practice">확인 연습 시작</button>`
+            ? `<div><span>6/6</span><p><b>개념 6절을 모두 읽었습니다.</b><small>확인 연습은 선택입니다. 직접 쓴 문장은 자동 채점되지 않으므로 핵심 조건과 대조하세요.</small></p></div><button class="primary-action" type="button" data-action="start-chapter-practice">선택 · 확인 연습</button><button class="text-action" type="button" data-action="next-chapter">다음 단원 읽기 →</button>`
             : `<div><span>${completion.visited}/6</span><p><b>아직 확인하지 않은 설계 단계가 있습니다.</b><small>문제보다 먼저 원리와 구조를 모두 확인하세요.</small></p></div><button class="primary-action" type="button" data-action="select-station" data-index="${engine.STATIONS.findIndex((station) => station.id === missing[0]?.id)}">남은 단계로 이동</button>`}
         </section>
       </article>`;
@@ -591,7 +627,7 @@
         <div class="studio-progress"><i style="width:${((studioSession.stationIndex + 1) / engine.STATIONS.length) * 100}%"></i></div>
         <div class="studio-shell">
           <aside class="studio-sidebar"><div class="module-identity"><p>MODULE</p><strong>${chapter.levelCode}.${data.getByLevel(chapter.levelCode).indexOf(chapter) + 1}</strong><span>${escapeHTML(chapter.title)}</span></div>${studioRailHTML(chapter, progress)}<div class="studio-ratio"><span><b>6</b> 설계 단계</span><span><b>${engine.flattenExercises(chapter).length}</b> 수행 문장</span></div></aside>
-          <main class="studio-reader">${renderStudioStation(chapter, progress)}<nav class="station-nav"><button type="button" data-action="select-station" data-index="${studioSession.stationIndex - 1}" ${studioSession.stationIndex === 0 ? "disabled" : ""}>← 이전 단계</button><span><b>${String(studioSession.stationIndex + 1).padStart(2, "0")}</b>${escapeHTML(station.label)}</span><button type="button" data-action="select-station" data-index="${studioSession.stationIndex + 1}" ${studioSession.stationIndex === engine.STATIONS.length - 1 ? "disabled" : ""}>다음 단계 →</button></nav></main>
+          <main class="studio-reader">${renderStudioStation(chapter, progress)}<nav class="station-nav"><button type="button" data-action="select-station" data-index="${studioSession.stationIndex - 1}" ${studioSession.stationIndex === 0 ? "disabled" : ""}>← 이전 단계</button><span><b>${String(studioSession.stationIndex + 1).padStart(2, "0")}</b>${escapeHTML(station.label)}</span><button type="button" data-action="complete-station">${studioSession.stationIndex === engine.STATIONS.length - 1 ? "이 절 읽기 완료 ✓" : "읽기 완료 · 다음 →"}</button></nav></main>
           <aside class="studio-inspector"><p class="micro-label">MODULE INTENT</p><h2>${escapeHTML(chapter.guide.essentialQuestion)}</h2><section><span>결정 규칙</span><p>${escapeHTML(chapter.guide.decisionRule)}</p></section><section><span>한국어 관점</span><p>${escapeHTML(chapter.guide.koreanLens)}</p></section><div class="inspector-meter"><b>${completion.visited}/6</b><span>확인한 단계</span><i><u style="width:${completion.percent}%"></u></i></div></aside>
         </div>
       </section>`;
@@ -602,7 +638,7 @@
     const chapter = studioSession.chapter;
     const completion = engine.stationCompletion(getProgress(chapter.id));
     if (!completion.complete) {
-      const missingIndex = engine.STATIONS.findIndex((station) => !getProgress(chapter.id).visitedStations.includes(station.id));
+      const missingIndex = engine.STATIONS.findIndex((station) => !getProgress(chapter.id).completedStations.includes(station.id));
       selectStudioStation(Math.max(0, missingIndex));
       return;
     }
@@ -613,7 +649,12 @@
   function startReview() {
     const count = state.goalMinutes <= 10 ? 5 : state.goalMinutes <= 15 ? 7 : 10;
     const items = engine.buildReviewSession(data.getAll(), state.progress, count);
-    if (!items.length) return;
+    if (!items.length) {
+      const readingDue = engine.getDueChapters(data.getAll(), state.progress)[0];
+      if (readingDue) beginStudio(readingDue.id);
+      else routeTo("review");
+      return;
+    }
     startPractice({ mode: "review", items, originChapterId: null });
   }
 
@@ -624,8 +665,10 @@
       originChapterId,
       index: 0,
       responses: [],
-      itemState: null
+      itemState: null,
+      baseProgress: Object.fromEntries([...new Set(items.map(item => item.chapterId))].map(id => [id, getProgress(id)]))
     };
+    studioSession = null;
     preparePracticeItem();
     currentView = "practice";
     history.pushState({ view: "practice" }, "", "#practice");
@@ -710,7 +753,7 @@
             ${renderExerciseControl(exercise, itemState)}
             ${itemState.answered ? `<section class="answer-feedback ${itemState.correct ? "is-correct" : "is-wrong"}"><span>${itemState.correct ? "STRUCTURE HOLDS" : "REPAIR NEEDED"}</span><h2>${itemState.correct ? "구조가 정확합니다." : `정답: ${escapeHTML(correctAnswerText(exercise))}`}</h2><p>${escapeHTML(exerciseExplanation(exercise))}</p><button class="primary-action" type="button" data-action="practice-next">${practiceSession.index === practiceSession.items.length - 1 ? "결과 보기" : "다음 문장"}</button></section>` : `<footer class="practice-tools"><button type="button" data-action="show-hint" ${itemState.hintShown ? "disabled" : ""}>${itemState.hintShown ? escapeHTML(exerciseHint(exercise)) : "힌트 한 줄"}</button>${exercise.type === "choice" ? `<span>선택하면 바로 근거를 확인합니다.</span>` : `<button class="check-answer" type="button" data-action="check-answer" ${exercise.type === "arrange" && !itemState.builtTokens.length ? "disabled" : ""}>문장 검사</button>`}</footer>`}
           </article>
-          <aside class="practice-context"><p class="micro-label">REFERENCE</p><h2>${escapeHTML(data.getChapter(exercise.chapterId)?.guide.decisionRule || "형태보다 먼저 의미와 문장 자리를 확인하세요.")}</h2><dl><div><dt>유형</dt><dd>${escapeHTML(exercise.modeLabel)}</dd></div><div><dt>힌트</dt><dd>${itemState.hintShown ? "사용" : "미사용"}</dd></div><div><dt>근거</dt><dd>정확도 + 속도</dd></div></dl></aside>
+          <aside class="practice-context"><p class="micro-label">REFERENCE</p><h2>${escapeHTML(itemState.hintShown || itemState.answered ? data.getChapter(exercise.chapterId)?.guide.decisionRule : "설명을 가리고 먼저 떠올려 보세요. 필요할 때 힌트를 열면 판단 규칙을 함께 볼 수 있습니다.")}</h2><dl><div><dt>유형</dt><dd>${escapeHTML(exercise.modeLabel)}</dd></div><div><dt>힌트</dt><dd>${itemState.hintShown ? "사용" : "미사용"}</dd></div><div><dt>근거</dt><dd>정답 · 힌트 · 복습 간격</dd></div></dl></aside>
         </main>
       </section>`;
   }
@@ -718,6 +761,7 @@
   function submitPractice(response) {
     if (!practiceSession || practiceSession.itemState.answered) return;
     const exercise = currentExercise();
+    if (response == null || String(response).trim() === "") return;
     const itemState = practiceSession.itemState;
     const correct = engine.isAnswerCorrect(exercise, response);
     itemState.answered = true;
@@ -741,6 +785,8 @@
     practiceSession.responses.push(attempt);
     state.attemptLog.push(attempt);
     state.attemptLog = state.attemptLog.slice(-MAX_ATTEMPT_LOG);
+    applyPracticeEvidence();
+    recordStudyDay();
     saveState();
     if (correct && state.soundEnabled) speak(correctAnswerText(exercise));
     render();
@@ -757,7 +803,7 @@
     render();
   }
 
-  function finishPractice() {
+  function applyPracticeEvidence() {
     const responses = [...practiceSession.responses];
     const grouped = responses.reduce((groups, attempt) => {
       (groups[attempt.chapterId] ||= []).push(attempt);
@@ -765,17 +811,23 @@
     }, {});
     const schedules = [];
     Object.entries(grouped).forEach(([chapterId, attempts]) => {
-      const result = engine.scheduleSession(getProgress(chapterId), {
+      const result = engine.scheduleSession(practiceSession.baseProgress[chapterId], {
         total: attempts.length,
+        types: new Set(attempts.map(attempt => attempt.type)).size,
         correct: attempts.filter((attempt) => attempt.correct).length,
         hints: attempts.filter((attempt) => attempt.hint).length,
         averageResponseMs: Math.round(attempts.reduce((sum, attempt) => sum + attempt.responseMs, 0) / attempts.length)
-      });
+      }, attempts.at(-1).at);
       setProgress(chapterId, result.progress);
       schedules.push({ chapter: data.getChapter(chapterId), ...result });
     });
+    return schedules;
+  }
+
+  function finishPractice() {
+    const responses = [...practiceSession.responses];
+    const schedules = applyPracticeEvidence();
     recordStudyDay();
-    saveState();
     resultSession = {
       mode: practiceSession.mode,
       originChapterId: practiceSession.originChapterId,
@@ -786,7 +838,9 @@
       hints: responses.filter((attempt) => attempt.hint).length
     };
     practiceSession = null;
+    state.pendingPractice = null;
     currentView = "result";
+    saveState();
     history.replaceState({ view: "result" }, "", "#result");
     render();
   }
@@ -844,7 +898,9 @@
     }
     clearTimeout(resetTimer);
     state = { ...defaultState(), migrationComplete: true };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    window.LearningData.write(STORAGE_KEY, JSON.stringify(state));
+    courseLevel = "A1";
+    courseQuery = "";
     currentView = "onboarding";
     studioSession = null;
     practiceSession = null;
@@ -889,6 +945,23 @@
       render();
     }
     if (action === "start-studio") beginStudio(target.dataset.chapter);
+    if (action === "resume-practice" && !resumePractice()) { state.pendingPractice = null; saveState(); render(); }
+    if (action === "complete-station" && studioSession) {
+      const chapterId = studioSession.chapter.id;
+      const stationId = engine.STATIONS[studioSession.stationIndex].id;
+      const progress = engine.completeStation(getProgress(chapterId), stationId);
+      // A reading-only review can be completed without forcing exercises.
+      if (stationId === "transfer" && progress.studioCompletedAt && !progress.attempts && progress.nextDue <= Date.now()) progress.nextDue = Date.now() + engine.DAY;
+      setProgress(chapterId, progress);
+      recordStudyDay();
+      saveState();
+      if (studioSession.stationIndex < engine.STATIONS.length - 1) selectStudioStation(studioSession.stationIndex + 1);
+      else render();
+    }
+    if (action === "next-chapter" && studioSession) {
+      const all = data.getAll(), next = all[all.indexOf(studioSession.chapter) + 1];
+      if (next) beginStudio(next.id); else routeTo("course");
+    }
     if (action === "select-station") selectStudioStation(target.dataset.index);
     if (action === "select-formula" && studioSession) {
       studioSession.formulaIndex = Number(target.dataset.index) || 0;
@@ -947,6 +1020,7 @@
   });
 
   document.addEventListener("input", (event) => {
+    if (event.target.id === "practice-answer" && practiceSession) { practiceSession.itemState.response = event.target.value; saveState(); }
     if (event.target.id === "course-search") updateCourseSearch(event.target.value);
     if (event.target.id === "transfer-draft") {
       const chapterId = event.target.dataset.chapter;
@@ -958,6 +1032,7 @@
   });
 
   document.addEventListener("keydown", (event) => {
+    if (event.isComposing || event.repeat || settingsDialog.open || event.target.id !== "practice-answer") return;
     if (currentView === "practice" && event.key === "Enter" && practiceSession && !practiceSession.itemState.answered) {
       const exercise = currentExercise();
       if (exercise.type !== "choice") {
@@ -987,31 +1062,27 @@
     }
   });
 
-  window.addEventListener("popstate", (event) => {
-    const hash = location.hash.replace(/^#/, "");
-    if (hash.startsWith("studio-")) {
-      beginStudio(hash.replace("studio-", ""), { push: false });
-      return;
-    }
-    const view = event.state?.view || hash;
-    if (["today", "course", "review", "records"].includes(view)) {
-      currentView = view;
-      studioSession = null;
-      practiceSession = null;
-      resultSession = null;
-      render();
-    }
+  window.addEventListener("popstate", () => { checkpointPractice(); boot(); });
+  let importing = false;
+  window.addEventListener("learning-data-imported", () => { importing = true; });
+  window.addEventListener("pagehide", () => { if (!importing) saveState(); });
+  window.LearningData.mount({dialog:settingsDialog, key:STORAGE_KEY, getState:() => { checkpointPractice(); return state; },
+    validate:value => Boolean(value && value.version === 2 && engine.LEVELS.includes(value.activeLevel) && value.progress && typeof value.progress === "object" && !Array.isArray(value.progress) && Array.isArray(value.attemptLog) && value.drafts && typeof value.drafts === "object")
   });
 
   function boot() {
     if (state.onboarded) {
       const hash = location.hash.replace(/^#/, "");
+      if (hash === "practice" && resumePractice()) return;
+      studioSession = null;
+      practiceSession = null;
+      resultSession = null;
       if (hash.startsWith("studio-")) {
         beginStudio(hash.replace("studio-", ""), { push: false });
         return;
       }
       if (["today", "course", "review", "records"].includes(hash)) currentView = hash;
-      else history.replaceState({ view: "today" }, "", "#today");
+      else { currentView = "today"; history.replaceState({ view: "today" }, "", "#today"); }
     } else {
       currentView = "onboarding";
       history.replaceState({ view: "onboarding" }, "", "#start");
