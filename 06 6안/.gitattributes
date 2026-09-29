@@ -1,0 +1,7 @@
+# Keep imported source and generated output byte-stable on Windows checkouts.
+# Two trailing spaces are intentional Markdown hard line breaks.
+content/*.md text eol=lf whitespace=-blank-at-eol
+data/chapters-*.js text eol=lf
+data/conversation-source.json text eol=lf
+scripts/*.mjs text eol=lf
+vendor/* text eol=lf

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   const DAY=86400000, intervals=[1,3,7,14,30];
-  const anchors=['concept','structure',...Array.from({length:12},(_,i)=>'topic-'+(i+1)),'examples','contrast','connections','practice'];
+  const anchors=['concept','structure',...Array.from({length:12},(_,i)=>'topic-'+(i+1)),...Array.from({length:80},(_,i)=>'reading-'+(i+1)),'examples','contrast','connections','practice'];
   const validId=id=>Number.isInteger(Number(id)) && Number(id)>=1 && Number(id)<=120;
   const stamp=n=>Number.isFinite(n) && n>=0 && n<=8640000000000000;
   const integer=n=>Number.isInteger(n) && n>=0;

@@ -79,6 +79,31 @@ progress::-webkit-progress-bar { background:var(--line); } progress::-webkit-pro
 .reader-topline button { font-size:12px; padding:8px 12px; }
 .reader h1 { font-size:clamp(25px,2.5vw,36px); }
 .reader-meta { color:var(--muted); font-size:12px; padding-bottom:24px; border-bottom:1px solid var(--line); }
+.manuscript { font-size:var(--body-size); line-height:1.9; overflow-wrap:anywhere; }
+.manuscript h1 { margin:32px 0 28px; line-height:1.5; }
+.manuscript h2 { font-size:1.4em; margin:34px 0 20px; line-height:1.5; }
+.manuscript h3 { font-size:1.13em; margin:28px 0 14px; line-height:1.65; }
+.manuscript h4,.manuscript h5,.manuscript h6 { font-size:1em; margin:24px 0 12px; }
+.manuscript p { margin:18px 0; }
+.manuscript strong { font-weight:700; color:#203b2d; }
+.manuscript blockquote { margin:20px 0; padding:2px 0 2px 20px; border-left:3px solid #b6c4b9; }
+.manuscript blockquote p { margin:6px 0; }
+.manuscript ul,.manuscript ol { padding-left:1.65em; margin:20px 0; }
+.manuscript li { padding-left:.18em; margin:8px 0; }
+.manuscript li p { margin:7px 0; }
+.manuscript hr { border:0; border-top:1px solid var(--line); margin:34px 0; }
+.manuscript code { font-family:ui-monospace,Consolas,Pretendard,monospace; font-size:.91em; background:#e9ece6; padding:.12em .32em; border-radius:3px; box-decoration-break:clone; -webkit-box-decoration-break:clone; }
+.manuscript pre { overflow:auto; padding:18px; background:var(--soft); border:1px solid var(--line); }
+.manuscript pre code { padding:0; background:none; white-space:pre; }
+.manuscript .table-scroll { overflow-x:auto; margin:24px 0; max-width:100%; scrollbar-width:thin; }
+.manuscript table { border-collapse:collapse; min-width:100%; font-size:.94em; line-height:1.7; text-align:left; }
+.manuscript th,.manuscript td { padding:11px 16px; border:1px solid var(--line); min-width:100px; }
+.manuscript th { background:var(--soft); font-weight:650; }
+.manuscript td { background:var(--page); }
+.manuscript table p { margin:0; }
+.manuscript a { text-decoration-color:#829789; }
+.reader-connections { margin-top:40px; padding-top:24px; border-top:1px solid var(--line); }
+.reader-connections h2 { font-size:16px; }
 .outline { position:sticky; top:154px; align-self:start; font-size:12px; padding-top:10px; max-height:calc(100dvh - 175px); overflow:auto; scrollbar-width:thin; }
 .inline-toc { margin:20px 0; font-size:13px; }
 .inline-toc a { display:block; padding:7px 0; }
@@ -172,8 +197,12 @@ dialog details { margin-top:20px; font-size:13px; } dialog details p { margin-to
 @media print {
   @page { margin:18mm; }
   body { background:white; color:black; font-size:11pt; --body-size:11pt; }
-  .portal-bar,.atlas-header,.sidebar,.outline,.skip-link,#toast,dialog,.note-section,.reading-finish,.page-turn,.reader-topline button,.optional-practice,.source-details { display:none!important; }
+  .portal-bar,.atlas-header,.sidebar,.outline,.skip-link,#toast,dialog,.note-section,.reading-finish,.page-turn,.reader-topline button,.optional-practice,.source-details,.inline-toc,.reader-connections { display:none!important; }
   .app-layout,.reader-layout { display:block; } #workspace { padding:0; }
   .reading-section { padding:14px 0; } .example,.formula,.compare-row { break-inside:avoid; }
   h1,h2,h3 { break-after:avoid; } a { text-decoration:none; }
+  .manuscript blockquote,.manuscript tr { break-inside:avoid; }
+  .manuscript .table-scroll { overflow:visible; }
+  .manuscript table { min-width:0; width:100%; }
+  .manuscript th,.manuscript td { min-width:0; }
 }
