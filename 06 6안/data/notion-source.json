@@ -1,0 +1,1087 @@
+{
+  "format": "notion-enhanced-markdown",
+  "url": "https://app.notion.com/p/3e90e2451ae381218535e6687480d409",
+  "fetched": "2026-09-30",
+  "stages": [
+    {
+      "id": 1,
+      "title": "1단계 — 영어 문장의 기본 구조",
+      "url": "https://app.notion.com/p/3e90e2451ae38114a647e13911af601c",
+      "edited": "2026-09-29T04:26:13.544Z",
+      "bodyCharacters": 924,
+      "bodySha256": "9af172e68423788bf95c337b2af496b1387224ab3b48b1d729844e83523834c1",
+      "manuscriptSha256": "f18139da9bd473db100f91ad6421862bbb42df7e526fd1c45681f33baf8f89c4"
+    },
+    {
+      "id": 2,
+      "title": "2단계 — be동사 am / is / are",
+      "url": "https://app.notion.com/p/3e90e2451ae381489e49d20ada895f1e",
+      "edited": "2026-09-29T04:26:16.177Z",
+      "bodyCharacters": 1406,
+      "bodySha256": "cb679cc174cadb1a1eb06fa0acfb88e58783010be2dfdef33d72340f8783077a",
+      "manuscriptSha256": "7920d895a0a987e35cc4d05d290172e5a4c788c05ade824a2df368d1e99082a8"
+    },
+    {
+      "id": 3,
+      "title": "3단계 — 일반동사",
+      "url": "https://app.notion.com/p/3e90e2451ae38112a308c9f9762c80dc",
+      "edited": "2026-09-29T04:26:21.038Z",
+      "bodyCharacters": 1422,
+      "bodySha256": "3b8de3aad1b219850d0e5766075960ee0aa412981719389eb1b4b079962f1f0a",
+      "manuscriptSha256": "76d954ef84984ddfba3d7b53fdd1fe22338ac8e88b1e3e1845f40b0da43e5522"
+    },
+    {
+      "id": 4,
+      "title": "4단계 — 인칭대명사",
+      "url": "https://app.notion.com/p/3e90e2451ae38136ac13de7351dcca06",
+      "edited": "2026-09-29T04:26:24.300Z",
+      "bodyCharacters": 1583,
+      "bodySha256": "758fdbf9b7cc7f4ff8fbbef84c6e2973678b559a746cad3cbca9f0f870f8b860",
+      "manuscriptSha256": "9be7cad25dfd2aeb9890c97615afdc468b2787fce6e8073751f0a91028d3c258"
+    },
+    {
+      "id": 5,
+      "title": "5단계 — 부정문",
+      "url": "https://app.notion.com/p/3e90e2451ae38185bfccf6cd95c46b67",
+      "edited": "2026-09-29T04:26:28.225Z",
+      "bodyCharacters": 1677,
+      "bodySha256": "fa212e7d1834058d804af653fa3493ff1b4124a2e2f0af99d418b5e67c4c133a",
+      "manuscriptSha256": "d7001422ff7b2be704465da890640b92f3803dcafa4e963451e0cd9ee3981ba9"
+    },
+    {
+      "id": 6,
+      "title": "6단계 — 의문문",
+      "url": "https://app.notion.com/p/3e90e2451ae38183855cee9e7e060842",
+      "edited": "2026-09-29T04:27:15.622Z",
+      "bodyCharacters": 1645,
+      "bodySha256": "793ac7647b1af27c1b9e003e68e5688d4b578b3e4dd1595649d570de71e18432",
+      "manuscriptSha256": "e97b0ca03f0222812c846ed37d7ee98c2ed298694b252eaae3b0ef9a608bff04"
+    },
+    {
+      "id": 7,
+      "title": "7단계 — 목적어(Object)",
+      "url": "https://app.notion.com/p/3e90e2451ae3814394d0d7d77402094b",
+      "edited": "2026-09-29T04:27:20.003Z",
+      "bodyCharacters": 1207,
+      "bodySha256": "ffbfa421910bc25df3a07216793591a5d0c287d5411ddda301f6f65be204655b",
+      "manuscriptSha256": "192ae30d13928a74d53732ca83111cf7ea27fc186b3db718b25908e5168cb614"
+    },
+    {
+      "id": 8,
+      "title": "8단계 — 명사(Noun)",
+      "url": "https://app.notion.com/p/3e90e2451ae38108a3c4fc307d87bfa4",
+      "edited": "2026-09-29T04:27:22.919Z",
+      "bodyCharacters": 1565,
+      "bodySha256": "5fd21e42b7657b3d4e196c03d1a3c24ff90aed494a65085618a3d3c6cdf66e48",
+      "manuscriptSha256": "e69888e52eb087d50645ba74d63626bae8e006d69edd9bb55000466b80e84c0b"
+    },
+    {
+      "id": 9,
+      "title": "9단계 — 명사의 단수와 복수",
+      "url": "https://app.notion.com/p/3e90e2451ae3811aa8e9caac16b6d2c8",
+      "edited": "2026-09-29T04:27:26.886Z",
+      "bodyCharacters": 1497,
+      "bodySha256": "e8f27cfe31c7db60d56ab84a285d57bce572deffc6e6e13ed910e9fa81bcc38c",
+      "manuscriptSha256": "517fe87379b02a45bfa87eaf45eb1b6a850385942086ffdcb8a8049cc10adc77"
+    },
+    {
+      "id": 10,
+      "title": "10단계 — 관사 a / an",
+      "url": "https://app.notion.com/p/3e90e2451ae381cdb64bda52ae95f451",
+      "edited": "2026-09-29T04:27:29.664Z",
+      "bodyCharacters": 1511,
+      "bodySha256": "3e8f97fa5350d5b105052725dee9c785b47870ff004970305a445c7e6e67572e",
+      "manuscriptSha256": "ef1d8e3136b7bdc232112162fc8f0efcf3a612ef079a8b51a24fa140a4a6af01"
+    },
+    {
+      "id": 11,
+      "title": "11단계 — 가산명사와 불가산명사",
+      "url": "https://app.notion.com/p/3e90e2451ae381079f85d9504f238842",
+      "edited": "2026-09-29T04:28:32.840Z",
+      "bodyCharacters": 2368,
+      "bodySha256": "3f3db4155b8448d345eb994e6d484d03a1b82eca53c0716dd460bbc709949f3e",
+      "manuscriptSha256": "05be417c2ca5875a615f5c3ab446d7b5f894484979dc14c8657770899aa14b82"
+    },
+    {
+      "id": 12,
+      "title": "12단계 — some / any",
+      "url": "https://app.notion.com/p/3e90e2451ae381488a47d64bd32ece3a",
+      "edited": "2026-09-29T04:28:38.085Z",
+      "bodyCharacters": 1851,
+      "bodySha256": "7361b3fd90fbc51f5183cb3f1e03fb5c54be3ce9d8f942fb99cd1c85b0a2853d",
+      "manuscriptSha256": "86ccae9211dbc691bdaad540fcb2b07e19b1420240e571c84bf49bf5d7e68a6b"
+    },
+    {
+      "id": 13,
+      "title": "13단계 — 정관사 the",
+      "url": "https://app.notion.com/p/3e90e2451ae381d8a87ef3416f6e2936",
+      "edited": "2026-09-29T04:28:41.158Z",
+      "bodyCharacters": 1711,
+      "bodySha256": "a944cda47f1d8e237c8b3fa6bdf406284f36fefacb9da532dcc1e4e232fdc0c9",
+      "manuscriptSha256": "800fd51a070de7f61464db5eb199bd06b1eda3af369db67093568be4ea9012c8"
+    },
+    {
+      "id": 14,
+      "title": "14단계 — 형용사",
+      "url": "https://app.notion.com/p/3e90e2451ae38199b5fac0b4fada1036",
+      "edited": "2026-09-29T04:28:43.910Z",
+      "bodyCharacters": 1458,
+      "bodySha256": "a9acaff1fcbdf6f54197c4b7b751926b74d59e0af28e3c6ae5795dc32fb19c8b",
+      "manuscriptSha256": "b2113df4bc924f84a5e663fd1d437c8688c779c07321c6f54f6d2e198a91e5d4"
+    },
+    {
+      "id": 15,
+      "title": "15단계 — 부사",
+      "url": "https://app.notion.com/p/3e90e2451ae381d6a900deb3f8c84383",
+      "edited": "2026-09-29T04:28:49.085Z",
+      "bodyCharacters": 1887,
+      "bodySha256": "7291447bfbfc3e961b0981de09131e9158c21d118eab58ac483064679cceb846",
+      "manuscriptSha256": "031680dc6d3f570e6d14f46af04d718cfd26ffed21fd1d9bf9ea6e984c5d3cf3"
+    },
+    {
+      "id": 16,
+      "title": "16단계 — 현재시제(Simple Present)",
+      "url": "https://app.notion.com/p/3e90e2451ae381769e87c2c384eb11f7",
+      "edited": "2026-09-29T04:30:12.531Z",
+      "bodyCharacters": 1911,
+      "bodySha256": "8996ef84854da573135a60536196b212450740225dd93153bb3c3b397a948808",
+      "manuscriptSha256": "cdc7e27d5b361f77f1b09065e33d3e4f2b2782e3576b7cc778c38ae131bf0445"
+    },
+    {
+      "id": 17,
+      "title": "17단계 — 빈도부사",
+      "url": "https://app.notion.com/p/3e90e2451ae381cf8a0bc397d4ba59a2",
+      "edited": "2026-09-29T04:30:15.764Z",
+      "bodyCharacters": 1565,
+      "bodySha256": "d74de5151b95dcb5749211b8ea88e0d4d6af7a835b6534f96f4787aa2e041aa8",
+      "manuscriptSha256": "d116aaac3add267156af2665adc73f7df75de3417852617e9e09705640993e81"
+    },
+    {
+      "id": 18,
+      "title": "18단계 — 과거시제(Simple Past)",
+      "url": "https://app.notion.com/p/3e90e2451ae3819cbc4bf78ed9fb2743",
+      "edited": "2026-09-30T00:12:03.408Z",
+      "bodyCharacters": 3107,
+      "bodySha256": "8b79fb4f1c8493e54eabc2c051838ba701df4550d4550d4efebdef65c7fb27a6",
+      "manuscriptSha256": "1ab98424cc5b0e0cfac390666279da3aa028ce0423c2f5858f81fac902a05d3b"
+    },
+    {
+      "id": 19,
+      "title": "19단계 — 미래 표현 will / be going to",
+      "url": "https://app.notion.com/p/3e90e2451ae3813eb01ef981651e48ed",
+      "edited": "2026-09-30T00:13:26.078Z",
+      "bodyCharacters": 2930,
+      "bodySha256": "729d7090f52aa8efc668bb9f0dbba0959ac2cdb47e1dca3093c11a8ecf197b6d",
+      "manuscriptSha256": "dee7e22f8797d0c172400278aa317171c5b96ad06508c69f4184b1719ff6bad2"
+    },
+    {
+      "id": 20,
+      "title": "20단계 — 현재진행형",
+      "url": "https://app.notion.com/p/3e90e2451ae381c4b05fc5252337e2ad",
+      "edited": "2026-09-30T00:13:33.448Z",
+      "bodyCharacters": 2783,
+      "bodySha256": "2075f4e1ea94265895682a7f81594cf08cc940a3d11837b48811dcf9b79616d1",
+      "manuscriptSha256": "30267b4f4c707dece960ad181ccdee200121434b9f1ba2563f00a5d358e1f586"
+    },
+    {
+      "id": 21,
+      "title": "21단계 — 과거진행형",
+      "url": "https://app.notion.com/p/3e90e2451ae3816898ccfeb60acf841e",
+      "edited": "2026-09-30T00:13:41.385Z",
+      "bodyCharacters": 2129,
+      "bodySha256": "56a3bd6fbf3920159e0b51985d69273cf397378ccc3a8d15ad09319b3f42f3cb",
+      "manuscriptSha256": "0bcaa4a31950961e6bf1682e76980f73674a1dee6075961a0e0eb237cd06884e"
+    },
+    {
+      "id": 22,
+      "title": "22단계 — 조동사의 기본 + can",
+      "url": "https://app.notion.com/p/3e90e2451ae3819ca025f8c70968aebf",
+      "edited": "2026-09-30T00:13:49.160Z",
+      "bodyCharacters": 2304,
+      "bodySha256": "277ebb105a266fc993d5b4ec89b33162337decd930640b842b924e80de074cb3",
+      "manuscriptSha256": "cfe377b90d5b700c51f690d085e54d226ca5fec4f9f333861b65204c1b5e74c0"
+    },
+    {
+      "id": 23,
+      "title": "23단계 — should",
+      "url": "https://app.notion.com/p/3e90e2451ae38163867dc8e035dee6a0",
+      "edited": "2026-09-30T00:13:56.628Z",
+      "bodyCharacters": 2304,
+      "bodySha256": "3b54d864efc4b0c96b593ff0a51bb3bc8a4dd96fd79ab3c798a7dfd2a099ff5f",
+      "manuscriptSha256": "6b336306798542f948b8712e172883ac2111bd9610a0874202c3c81e8c88e0e0"
+    },
+    {
+      "id": 24,
+      "title": "24단계 — must / have to",
+      "url": "https://app.notion.com/p/3e90e2451ae3815fa349c38626812563",
+      "edited": "2026-09-30T00:14:02.827Z",
+      "bodyCharacters": 3243,
+      "bodySha256": "a05d9e02f8e7bd52f0f4c9243d42e2f0d30567b6145132345325a6e705bfe2d3",
+      "manuscriptSha256": "cc1bf15e2ba67a0ab605cbf152557016a9993df65fa687215285a8a4e0023647"
+    },
+    {
+      "id": 25,
+      "title": "25단계 — may / might",
+      "url": "https://app.notion.com/p/3e90e2451ae381848297ec215e574bca",
+      "edited": "2026-09-30T00:14:10.312Z",
+      "bodyCharacters": 3357,
+      "bodySha256": "dad4fd7dcf313f1e29cb6fdf5220e67ea45659f009a721ec705b7b1c328c1b7e",
+      "manuscriptSha256": "b35aa269f2832f05e6f46878285b347886252b0843d9acec3a050e97d122c267"
+    },
+    {
+      "id": 26,
+      "title": "26단계 — 비교급",
+      "url": "https://app.notion.com/p/3e90e2451ae381d69e00f61c3dc730fb",
+      "edited": "2026-09-30T00:14:18.231Z",
+      "bodyCharacters": 3262,
+      "bodySha256": "50f22673c284c60de55520233a66e4584ab98e10b3db631515acae1c7b0c4ab5",
+      "manuscriptSha256": "6200cfd950d551b7babb541e1c0697d5b72eb9054216cc8c600344f2b069e3c6"
+    },
+    {
+      "id": 27,
+      "title": "27단계 — 최상급",
+      "url": "https://app.notion.com/p/3e90e2451ae381d4a72cfe752720a9a4",
+      "edited": "2026-09-30T00:14:24.983Z",
+      "bodyCharacters": 3084,
+      "bodySha256": "2ef7bbc73ad0f50fd46bdd465c5b870a23e9c7324b92eb6709f46d6af47a351f",
+      "manuscriptSha256": "5591bebe9c7b0cec0aaf4add9ef63f48d721fdfe3e6d7c27c870cd6e7d9dff25"
+    },
+    {
+      "id": 28,
+      "title": "28단계 — 전치사 in / on / at",
+      "url": "https://app.notion.com/p/3e90e2451ae381e389c6ed24bde64ea0",
+      "edited": "2026-09-30T00:14:31.115Z",
+      "bodyCharacters": 2885,
+      "bodySha256": "11cac654740338499a5ba0d946b462526aa0150ddf331bb5e9bb72d1fe5ef4fc",
+      "manuscriptSha256": "8f080f2ac0d9600185b7fae2e8277c918c0065d1dd9191829314cec6bc88f17c"
+    },
+    {
+      "id": 29,
+      "title": "29단계 — 방향 전치사 to / from / into / out of",
+      "url": "https://app.notion.com/p/3e90e2451ae381f98263d713df50ae10",
+      "edited": "2026-09-30T00:14:39.217Z",
+      "bodyCharacters": 3308,
+      "bodySha256": "c97b6698ff302d9a183724d4735585e58938dd3b3448f4363bb95b4b0abf2bcd",
+      "manuscriptSha256": "9f2d70bc0b493aaea81c4c065b72fd2e4bffb33f23c250b9ae4a559b69b60ceb"
+    },
+    {
+      "id": 30,
+      "title": "30단계 — 목적격 대명사",
+      "url": "https://app.notion.com/p/3e90e2451ae381979dcefcfd026ad78e",
+      "edited": "2026-09-30T00:14:46.689Z",
+      "bodyCharacters": 2672,
+      "bodySha256": "4d85e8b385fd6953b3bea7b4318c3c3f81faa3ec713615d3eb7b4e150215ca59",
+      "manuscriptSha256": "e0c70242d71ad0c9b69c58366977d89b65be7bdd7e80d2881d35ab631652c16f"
+    },
+    {
+      "id": 31,
+      "title": "31단계 — 소유형용사",
+      "url": "https://app.notion.com/p/3e90e2451ae381e5ba9ff00e352e644d",
+      "edited": "2026-09-30T00:14:53.759Z",
+      "bodyCharacters": 2594,
+      "bodySha256": "a147227fb89bfb8b94e6376bd4344d0823209654804b88f06752c01645a55c99",
+      "manuscriptSha256": "b33ad22ccca50a35882c6188fe11452c4bc94f1531c8d1f3b1e1915d44f17317"
+    },
+    {
+      "id": 32,
+      "title": "32단계 — 소유대명사",
+      "url": "https://app.notion.com/p/3e90e2451ae381cb8a1fc50e0838d527",
+      "edited": "2026-09-30T00:15:00.385Z",
+      "bodyCharacters": 2109,
+      "bodySha256": "c37a38f3826e27fab1aeac2e7ab44352aa0a7af6b7697939ada96c8d17cbda9d",
+      "manuscriptSha256": "2921949cbacc0399a49166ef1b80f65255ef912fa63d3c8ae21fe6b0a103c1e7"
+    },
+    {
+      "id": 33,
+      "title": "33단계 — 지시대명사",
+      "url": "https://app.notion.com/p/3e90e2451ae3811c9da0faf8e8a10cf9",
+      "edited": "2026-09-30T00:15:16.421Z",
+      "bodyCharacters": 2306,
+      "bodySha256": "1bd14298f1ea09fe79769c864a9e4821bc12339a0f791e2a637c80e6d2ae1313",
+      "manuscriptSha256": "c7466b6ff927abb8adcc4c9d8a20d4ac1494b0fe02ae02f50dae152d0e7ddc0e"
+    },
+    {
+      "id": 34,
+      "title": "34단계 — there is / there are",
+      "url": "https://app.notion.com/p/3e90e2451ae3819eabf2d0a6dd62a887",
+      "edited": "2026-09-30T00:15:08.926Z",
+      "bodyCharacters": 2070,
+      "bodySha256": "558962c2f32031060f095f6e5cdb22f7e0ec4af275d6095599e60b10f25564f4",
+      "manuscriptSha256": "b8419246329091cf6f30bc08f11f39041ad0054b07f67138c37ed579d23c4185"
+    },
+    {
+      "id": 35,
+      "title": "35단계 — some / any / no + there is/are",
+      "url": "https://app.notion.com/p/3e90e2451ae381fc821ef1cdc2a1a50f",
+      "edited": "2026-09-30T00:15:32.508Z",
+      "bodyCharacters": 2454,
+      "bodySha256": "a94b8ec55d8fd723a8a8b510c7b35757f45c9a7f67538349f7bf74d25cfe72de",
+      "manuscriptSha256": "089d5b3fb2c4ec8ead9cacc7d1f1699972677c7421083e4cab5d348dd4694450"
+    },
+    {
+      "id": 36,
+      "title": "36단계 — someone / anyone / no one / something / anything / nothing",
+      "url": "https://app.notion.com/p/3e90e2451ae38154b603f5169bcadc7b",
+      "edited": "2026-09-30T00:15:25.017Z",
+      "bodyCharacters": 2967,
+      "bodySha256": "a9e15fb5a158810dbe9b7834550c92ee1a1656e9849f8198200ca0d3a198dbb6",
+      "manuscriptSha256": "b83869fca22cf108b2af208f969dea93ba592bed1e8b4655187cfcc941f82690"
+    },
+    {
+      "id": 37,
+      "title": "37단계 — 의문사 who / what / where / when / why / how",
+      "url": "https://app.notion.com/p/3e90e2451ae3812aac19d5ffe5acaa7a",
+      "edited": "2026-09-30T00:15:40.106Z",
+      "bodyCharacters": 3069,
+      "bodySha256": "0984719899548cf70bf6f9755b2214b010dec370d22e689b95cf2dadb4e16ee0",
+      "manuscriptSha256": "7e6f7a559bc1fc636699d831ec9af7e415bd541a8c547e4b859e775ae39998fa"
+    },
+    {
+      "id": 38,
+      "title": "38단계 — how much / how many / how long / how often",
+      "url": "https://app.notion.com/p/3e90e2451ae381babf94d8d88fd5955a",
+      "edited": "2026-09-30T00:15:48.018Z",
+      "bodyCharacters": 3323,
+      "bodySha256": "2f0d3e9a3d2c32157c7bfe592b5e0d5aeaf762246df353819123cf9ae78dad19",
+      "manuscriptSha256": "17adfaf503fd4c66cf0e25afd7bd66a872a227157ced25e7a12020f8e187885b"
+    },
+    {
+      "id": 39,
+      "title": "39단계 — to부정사 기본",
+      "url": "https://app.notion.com/p/3e90e2451ae381daae23f22f37612fc1",
+      "edited": "2026-09-30T00:15:57.971Z",
+      "bodyCharacters": 3391,
+      "bodySha256": "c34d6cec29cb26a644c5d5bb24b0f5ef35b4b6d40f4a6fb191b4ad79f6e42ce0",
+      "manuscriptSha256": "da0fa011838067f5a67636c72048f07378679f9aff3c30a50f39affa63dda7d3"
+    },
+    {
+      "id": 40,
+      "title": "40단계 — to부정사의 목적 표현",
+      "url": "https://app.notion.com/p/3e90e2451ae381e2a0a1c29152cafdd7",
+      "edited": "2026-09-30T00:16:05.273Z",
+      "bodyCharacters": 2865,
+      "bodySha256": "7eb2565366933c46f7eef72bfde4bf339788db24690c07688a50b92aefff6f54",
+      "manuscriptSha256": "60354a18549c73e97fd7c063b17bcb81ceb09af2700b009dd65676b097c8df36"
+    },
+    {
+      "id": 41,
+      "title": "41단계 — 동명사",
+      "url": "https://app.notion.com/p/3e90e2451ae381ae9540d429adf69379",
+      "edited": "2026-09-30T00:16:20.218Z",
+      "bodyCharacters": 4057,
+      "bodySha256": "4c4cb251c63bd87f0a7dcda1e813edfff508699bfea991808fab84c80450f6e4",
+      "manuscriptSha256": "f38b667354eff7d79ada4d9e6703f9f47d927eb70e3c9daa6f61872939a03513"
+    },
+    {
+      "id": 42,
+      "title": "42단계 — to부정사 vs 동명사",
+      "url": "https://app.notion.com/p/3e90e2451ae38150a021dbecfd950f47",
+      "edited": "2026-09-30T00:16:13.191Z",
+      "bodyCharacters": 5782,
+      "bodySha256": "322ae24eb30248be2bd9751f77fe52bc575f5f29deddfba4fbb50ca96283618b",
+      "manuscriptSha256": "3836b4b93844cf0f365dd83d3f92eee89ddd70f1e18b81f7ddef8017605684eb"
+    },
+    {
+      "id": 43,
+      "title": "43단계 — 목적어 + to부정사",
+      "url": "https://app.notion.com/p/3e90e2451ae38188b8dbfa733666543f",
+      "edited": "2026-09-30T00:16:29.315Z",
+      "bodyCharacters": 2925,
+      "bodySha256": "41e46d03f6ac998edab388d47320e229874b49b0c106141ea1e32dfd658242c5",
+      "manuscriptSha256": "0be58a4c83d12de661c5158b5925a6ee0c5cbe7d61876f1f283ff007d174d422"
+    },
+    {
+      "id": 44,
+      "title": "44단계 — 사역동사 make / let / have",
+      "url": "https://app.notion.com/p/3e90e2451ae381e2b82df064ca576a35",
+      "edited": "2026-09-30T00:16:39.742Z",
+      "bodyCharacters": 3268,
+      "bodySha256": "577f033f7f6fd2f4f9c1953adc6b9503056aac651f4943c147e190e9e1693549",
+      "manuscriptSha256": "2b982efa2816d163e28c798d00af0a85d5cc54a8e08e90d5eec1507cafb2a356"
+    },
+    {
+      "id": 45,
+      "title": "45단계 — 지각동사",
+      "url": "https://app.notion.com/p/3e90e2451ae38186beb9d40da6a59ef9",
+      "edited": "2026-09-30T00:16:49.255Z",
+      "bodyCharacters": 2312,
+      "bodySha256": "bea095d0320cdd0f9b8b0680794b54818640d467b96147920f37401302880979",
+      "manuscriptSha256": "0a4a60e82ef6d928dc597906c7d66beef4020887bbd0ef629e9a3aab33ee011c"
+    },
+    {
+      "id": 46,
+      "title": "46단계 — 접속사 and / but / or / so / because",
+      "url": "https://app.notion.com/p/3e90e2451ae381be9aeff4cc54c4c4cd",
+      "edited": "2026-09-30T00:16:55.504Z",
+      "bodyCharacters": 2164,
+      "bodySha256": "39d30045fa432b8257bb9b18f2788aa15569991a2cb5085b6b9d422bd0cf080b",
+      "manuscriptSha256": "cdcd4c2a98003114dffcc65e0cc0f5dac5b7053c5b4eedb2e913de4532342180"
+    },
+    {
+      "id": 47,
+      "title": "47단계 — when / before / after / while",
+      "url": "https://app.notion.com/p/3e90e2451ae381378e72f6249b9ff39a",
+      "edited": "2026-09-30T00:17:04.954Z",
+      "bodyCharacters": 3025,
+      "bodySha256": "84672c7d50cb517040ee78274bff05ef61a533bf85ae337dbf60ef1ca762317a",
+      "manuscriptSha256": "83d94cfd14e55dabe3bb62719ef9373460591c5c4f6ab1b5515f91eef9f69587"
+    },
+    {
+      "id": 48,
+      "title": "48단계 — 조건문 기초 if",
+      "url": "https://app.notion.com/p/3e90e2451ae3817d9641c8bc69b43d1e",
+      "edited": "2026-09-30T00:17:12.971Z",
+      "bodyCharacters": 2682,
+      "bodySha256": "6ae997353f53e7bfc4b525b6472ff26a3f69af023b4b846c4ae724ffdfa700a8",
+      "manuscriptSha256": "cdad48a7b42c38f4974878a3893c5a6d144f96a4a9eeefaff3fe0414bbbf0655"
+    },
+    {
+      "id": 49,
+      "title": "49단계 — 현재완료",
+      "url": "https://app.notion.com/p/3e90e2451ae38172a8adfb6d8b8b474f",
+      "edited": "2026-09-30T00:17:25.689Z",
+      "bodyCharacters": 3934,
+      "bodySha256": "84c0d13210ad59c556a8b5c43317be34648e403de6388aaf2ec0af9d045608a4",
+      "manuscriptSha256": "1b3e73791ac052965e8e190a498b5fada81c2f3dbaccd8b33d9d8213dbc7f084"
+    },
+    {
+      "id": 50,
+      "title": "50단계 — 현재완료 vs 과거시제",
+      "url": "https://app.notion.com/p/3e90e2451ae381f1846bdb0e9820d2ca",
+      "edited": "2026-09-30T00:17:36.303Z",
+      "bodyCharacters": 3953,
+      "bodySha256": "dadd60d7a1c9269f4210ecdf429cea0cc0510614ec7b5a2f2afbc29c371e8ae3",
+      "manuscriptSha256": "af0af44674135c3c05061bb731a52167121c774ba743a8aa01c31a18dfe64ab5"
+    },
+    {
+      "id": 51,
+      "title": "51단계 — 현재완료진행형",
+      "url": "https://app.notion.com/p/3e90e2451ae38186be6bcd8a650dd89c",
+      "edited": "2026-09-30T00:17:46.386Z",
+      "bodyCharacters": 3206,
+      "bodySha256": "ba5453a5796f07e582c88f3ba10fc985d65d01eff7fdb46e4c9d7a90a4ce83b4",
+      "manuscriptSha256": "a2fb08fc7e65cef3b9fe42d1e0d60d60d4f37b959eb41cfddfb7e614b6bdaf86"
+    },
+    {
+      "id": 52,
+      "title": "52단계 — 수동태",
+      "url": "https://app.notion.com/p/3e90e2451ae381ee9ec7e5994db8d1c4",
+      "edited": "2026-09-30T00:17:52.776Z",
+      "bodyCharacters": 4085,
+      "bodySha256": "28a28a859e89d52e78ec0c40cf6da3266e9e04057fd3b15a3feff94f386dbf0c",
+      "manuscriptSha256": "53f1f5e330fba21dad9b6627a295645a7bb4fb82c15a667518f878f3375aac41"
+    },
+    {
+      "id": 53,
+      "title": "53단계 — 관계대명사 who / which / that",
+      "url": "https://app.notion.com/p/3e90e2451ae38122a599c11338089c27",
+      "edited": "2026-09-30T00:13:08.491Z",
+      "bodyCharacters": 3195,
+      "bodySha256": "6d374ac624f6e0658284e322b4356c2cf696bc2eeb3418b1652021253e5b8391",
+      "manuscriptSha256": "aa9841fc8b69fef29cff0296cb6c95c5c1d54bd9e70f50bbe8e0bef329313860"
+    },
+    {
+      "id": 54,
+      "title": "54단계 — whose / where / when",
+      "url": "https://app.notion.com/p/3e90e2451ae38113a902c0017cf27914",
+      "edited": "2026-09-30T00:13:40.308Z",
+      "bodyCharacters": 3315,
+      "bodySha256": "372d1248ea4ee2455347880a1f3c91c4f56425bb22044e9d852b2c32b5040dc9",
+      "manuscriptSha256": "e70c5b1c165664fb61e591fdc0277b2a057845bf71aede445b8d7f003b44eef2"
+    },
+    {
+      "id": 55,
+      "title": "55단계 — 제한적 / 비제한적 관계절",
+      "url": "https://app.notion.com/p/3e90e2451ae381a6b0a7f9e3fb11d4a0",
+      "edited": "2026-09-30T00:13:47.511Z",
+      "bodyCharacters": 3641,
+      "bodySha256": "28cac640d173fedb6bb16200799a88981f09090d85382f1cb3eb703c42d56b22",
+      "manuscriptSha256": "56731b083219671341bfb80796a469b812dd43591759592773ed7718fdbeaa25"
+    },
+    {
+      "id": 56,
+      "title": "56단계 — 간접의문문",
+      "url": "https://app.notion.com/p/3e90e2451ae381bd9ffbd7e9d3452a29",
+      "edited": "2026-09-30T00:13:54.817Z",
+      "bodyCharacters": 3401,
+      "bodySha256": "879480c1ccd1a85ff4f13876ad1472f51cd0de5977a6b1415486b600f0075a1f",
+      "manuscriptSha256": "55cc4e584301902e9135700996b397c0719efeb5d332ebd99aec2042999aa961"
+    },
+    {
+      "id": 57,
+      "title": "57단계 — 명사절",
+      "url": "https://app.notion.com/p/3e90e2451ae381ff94aeef734d7efe2e",
+      "edited": "2026-09-30T00:14:03.848Z",
+      "bodyCharacters": 3893,
+      "bodySha256": "f5a5f0688292254c0832dcd6a1de0b420f09b507facb9d52de3916e45cf06d53",
+      "manuscriptSha256": "b8b414b6eff7e001dcb78e9bbcd41890dc83638cedc4def0cd7d60b2d0bdd444"
+    },
+    {
+      "id": 58,
+      "title": "58단계 — 가주어 it",
+      "url": "https://app.notion.com/p/3e90e2451ae381618368eefb7c4cd724",
+      "edited": "2026-09-30T00:14:14.176Z",
+      "bodyCharacters": 4232,
+      "bodySha256": "3bd707bdfd9b305ce13e97e6a62a88363834bfd0fed49b9ba07271debe1a8ff2",
+      "manuscriptSha256": "a86b55dfc08f418f2025adbc9e6603de876c464cfab36cc42f9250551403c023"
+    },
+    {
+      "id": 59,
+      "title": "59단계 — too ... to / enough to",
+      "url": "https://app.notion.com/p/3e90e2451ae38160abddfc478ee8c27c",
+      "edited": "2026-09-30T00:15:05.992Z",
+      "bodyCharacters": 3481,
+      "bodySha256": "a9c1668a8c311177337eeb39982e0de694de18fd119312dd4189982b666bd4b5",
+      "manuscriptSha256": "0728bc0d2f085cc872f9f5b0e91bc8b0beeb289ee098ce3cdaa945bfc2d194e9"
+    },
+    {
+      "id": 60,
+      "title": "60단계 — so ... that / such ... that",
+      "url": "https://app.notion.com/p/3e90e2451ae3816f9964fcb20fc60624",
+      "edited": "2026-09-30T00:15:14.374Z",
+      "bodyCharacters": 2871,
+      "bodySha256": "78dd783ed677fda4d48f18c5aac9c832dd4b3c25414c31499f1e645574f435ef",
+      "manuscriptSha256": "a52220300404d48cb4548ea465c2727cedfa4e223720d94750adfd6d27625eac"
+    },
+    {
+      "id": 61,
+      "title": "61단계 — as ... as",
+      "url": "https://app.notion.com/p/3e90e2451ae381b59cd7d6b7e16e2adf",
+      "edited": "2026-09-30T00:15:23.618Z",
+      "bodyCharacters": 2307,
+      "bodySha256": "797bab4f4bf5ae84fc03e22292f9663f10ff39f2c2fa4b4977349b7bfb95549e",
+      "manuscriptSha256": "20a39b5623489c0eed27b8a0de901e7e0f854959a4c51d50f23fbae67bcf328f"
+    },
+    {
+      "id": 62,
+      "title": "62단계 — used to / be used to / get used to",
+      "url": "https://app.notion.com/p/3e90e2451ae3814cb81bebc7fa811dd4",
+      "edited": "2026-09-30T00:15:33.067Z",
+      "bodyCharacters": 3970,
+      "bodySha256": "1d8c47d9e9775ecc95db96846127cde534d0f0a511d30d776af4ac0934673fca",
+      "manuscriptSha256": "6dad2f11585a2f570358d69539860bab94c94105ffbb04aead68aa90c0503949"
+    },
+    {
+      "id": 63,
+      "title": "63단계 — would 기본 용법",
+      "url": "https://app.notion.com/p/3e90e2451ae381809b12e2b5f03d2a10",
+      "edited": "2026-09-30T00:15:42.295Z",
+      "bodyCharacters": 3677,
+      "bodySha256": "15bd72eaab02f71ec53ee7da089c3dd2bfabc25118521d70a50d15c945785f12",
+      "manuscriptSha256": "b3373a41a4a603640a39df1af71a81b00a9ef8722953a1b8d433ae95754d4f87"
+    },
+    {
+      "id": 64,
+      "title": "64단계 — 가정법 과거",
+      "url": "https://app.notion.com/p/3e90e2451ae381439d39ff8c068b88bb",
+      "edited": "2026-09-30T00:15:50.281Z",
+      "bodyCharacters": 4169,
+      "bodySha256": "badaf7674efbe5a27152231e902d154422d1545d881f48eeba1ef776ae2f5a74",
+      "manuscriptSha256": "52cd2e041604dbe1935e25820cce34f035c1a408fbe847b7134b62bea35cdf73"
+    },
+    {
+      "id": 65,
+      "title": "65단계 — 가정법 과거완료",
+      "url": "https://app.notion.com/p/3e90e2451ae3819aafe5fc253688a33c",
+      "edited": "2026-09-30T00:15:58.065Z",
+      "bodyCharacters": 3495,
+      "bodySha256": "9ad6fb5cd365a48be9e5dc938a5a310b2b5d8df8dfb4e7feb467453895f1f93f",
+      "manuscriptSha256": "51112fb0b6b5a575aafef4fe19782aa4a7c86f955a8cb6dd93fae29b0f23c1c5"
+    },
+    {
+      "id": 66,
+      "title": "66단계 — 혼합가정법",
+      "url": "https://app.notion.com/p/3e90e2451ae3812e9463f94e07f71a66",
+      "edited": "2026-09-30T00:16:38.131Z",
+      "bodyCharacters": 3180,
+      "bodySha256": "a4fedb5e932f7cde6ad3ca8b604b1a4946c7549c7b615659a321a0ebab8c4df2",
+      "manuscriptSha256": "ec9df91ee3fa8f9090fca00e1999122542e9c3de4020da14c112ef13a1519d4d"
+    },
+    {
+      "id": 67,
+      "title": "67단계 — 과거완료",
+      "url": "https://app.notion.com/p/3e90e2451ae381c99c07c09dce3781d5",
+      "edited": "2026-09-30T00:16:45.175Z",
+      "bodyCharacters": 3837,
+      "bodySha256": "1da41c497b826cdb4758dcf284fa6fb20231e8a079c3d8b1cca9e24f12199937",
+      "manuscriptSha256": "72e25e8b5a0326075a9ae11bb66452a2845cccd048301c9a5e66e0eeed55fd58"
+    },
+    {
+      "id": 68,
+      "title": "68단계 — 간접화법",
+      "url": "https://app.notion.com/p/3e90e2451ae381b3bfd7c6a6f611bf09",
+      "edited": "2026-09-30T00:16:54.081Z",
+      "bodyCharacters": 4769,
+      "bodySha256": "c795ac56486e1e9892374aabed5a9921a045e48e892f1adf01eb3eeb7d934445",
+      "manuscriptSha256": "ca910167d4583821ab209b1479b249dd26f83abae795c371011b91257d788a54"
+    },
+    {
+      "id": 69,
+      "title": "69단계 — have/get something done",
+      "url": "https://app.notion.com/p/3e90e2451ae381c8837dd2b6c6b5ea97",
+      "edited": "2026-09-30T00:17:04.833Z",
+      "bodyCharacters": 3139,
+      "bodySha256": "ff50470dd35543eb2d2df824571ddca312125be93676099d51123ceaebcbdeb3",
+      "manuscriptSha256": "ef2810895ecc89af1ac53d45d8f78c80e1a1ce10f3eced0c456a887b1ac512ce"
+    },
+    {
+      "id": 70,
+      "title": "70단계 — have been / have gone 확장",
+      "url": "https://app.notion.com/p/3e90e2451ae381e6bd8ccfb737ef1d4a",
+      "edited": "2026-09-30T00:17:12.840Z",
+      "bodyCharacters": 3162,
+      "bodySha256": "d47bdfdff4db0f038eaf6184440bed2e504260a078f8f5eea6fb73d5242d6e09",
+      "manuscriptSha256": "8c26b11e6cdb6453b1e516a2f0b31d41c19dd7549340fcec9d0c97dfb4bec183"
+    },
+    {
+      "id": 71,
+      "title": "71단계 — could / was able to / managed to",
+      "url": "https://app.notion.com/p/3e90e2451ae381f9a6c8ee4b4b27c6d1",
+      "edited": "2026-09-30T00:17:21.216Z",
+      "bodyCharacters": 4036,
+      "bodySha256": "7970ed4435fb3247eb5cea209b03b4b8fb2e12a3e9efc65a3a4c46ad9c8aa01a",
+      "manuscriptSha256": "589ae0f3362552561ad693d38f314315b8a451500bb06ceb9274bcd45434314d"
+    },
+    {
+      "id": 72,
+      "title": "72단계 — 현재에 대한 추측의 조동사",
+      "url": "https://app.notion.com/p/3e90e2451ae381a899c5c4e5806af269",
+      "edited": "2026-09-30T00:17:29.541Z",
+      "bodyCharacters": 3715,
+      "bodySha256": "cf5e644a33145b3cc33dd185f9657cafbe9fd8048c98d551506876e67ed7ecc6",
+      "manuscriptSha256": "cf03ce6f077f70d3f2111e92373ce7268e74ce194ca735a0090fff39cf28d011"
+    },
+    {
+      "id": 73,
+      "title": "73단계 — 과거에 대한 추측",
+      "url": "https://app.notion.com/p/3e90e2451ae38138bc90c95eebc14811",
+      "edited": "2026-09-30T00:17:57.591Z",
+      "bodyCharacters": 3631,
+      "bodySha256": "df9e90cd067f32a74b40a1ba6f01d0261b8cdebd0720a77e57e74eb9c83e5ec7",
+      "manuscriptSha256": "01b66466cc4ac8c3a10092259cea6ad18cf26388339236ea6e571f48c72c0c04"
+    },
+    {
+      "id": 74,
+      "title": "74단계 — should have p.p.",
+      "url": "https://app.notion.com/p/3e90e2451ae381089f36d46bf5b12d06",
+      "edited": "2026-09-30T00:18:05.321Z",
+      "bodyCharacters": 2839,
+      "bodySha256": "5fd58bf8cc53d7ce822fcfe846368a24397c5fe45db83eeb5791dbd40845d325",
+      "manuscriptSha256": "eebd434a6631202933b143be3a666b9c04ff7f71a3f2056ab7d1fac9f6cb8372"
+    },
+    {
+      "id": 75,
+      "title": "75단계 — could have / would have / might have",
+      "url": "https://app.notion.com/p/3e90e2451ae3816a93d4c64bc98b7b1d",
+      "edited": "2026-09-30T00:18:13.401Z",
+      "bodyCharacters": 4263,
+      "bodySha256": "1b60c6548632f30c7b06082286136c89af646df6a919fd93af824e0a8173d938",
+      "manuscriptSha256": "f8080cd01082fc0e971f79e350b2d003a0eaaa38f7d912ff514132bae696f30c"
+    },
+    {
+      "id": 76,
+      "title": "76단계 — wish",
+      "url": "https://app.notion.com/p/3e90e2451ae381b68056f89911dc2970",
+      "edited": "2026-09-30T00:18:21.012Z",
+      "bodyCharacters": 3408,
+      "bodySha256": "797b652207fbdabce1dea6aeae5e4584c013b44be2b87f5c19beef8914293eb2",
+      "manuscriptSha256": "32dc75af0dbb5ddf1ed4928ef56c0595d2af71a029d82b6c88483baa32894644"
+    },
+    {
+      "id": 77,
+      "title": "77단계 — if only",
+      "url": "https://app.notion.com/p/3e90e2451ae38154bb5ed554afe5aed4",
+      "edited": "2026-09-30T00:18:27.890Z",
+      "bodyCharacters": 2341,
+      "bodySha256": "8718a6da16fe530d9ced61a34eb45e8e0faca8372be8141df5e8983893eefb52",
+      "manuscriptSha256": "745899a6a7b8bfbc46b40c68cb62d84f7d66af99f8d50472e07b9af9ccc553ee"
+    },
+    {
+      "id": 78,
+      "title": "78단계 — would rather",
+      "url": "https://app.notion.com/p/3e90e2451ae381e19f4dddf389262f5f",
+      "edited": "2026-09-30T00:18:36.364Z",
+      "bodyCharacters": 3144,
+      "bodySha256": "cc446925609623873751cc827ff411dd218cd7ce7927231bf33c2e1a54906628",
+      "manuscriptSha256": "c0c1386c505fc3fe0a73f7d91a800026744bfc470008d95e281d6bab14ccf6f0"
+    },
+    {
+      "id": 79,
+      "title": "79단계 — had better",
+      "url": "https://app.notion.com/p/3e90e2451ae3814097e3d3b18183b85e",
+      "edited": "2026-09-30T00:18:45.317Z",
+      "bodyCharacters": 3698,
+      "bodySha256": "e9062cec9daa118f57aafd69cdf94225e58f1531c14fdf3a6b3c24eae1573d7a",
+      "manuscriptSha256": "f9a721305b9e6418a04cd39997bfd8e8f4a4e26cb4e388106b0660726807d99d"
+    },
+    {
+      "id": 80,
+      "title": "80단계 — be supposed to",
+      "url": "https://app.notion.com/p/3e90e2451ae381fba4ecceeb320c7d05",
+      "edited": "2026-09-30T00:19:14.575Z",
+      "bodyCharacters": 3456,
+      "bodySha256": "161e25518f0e4bcf76eea27bb2023b240deeae7afb8abc9e30d7aaf874966d97",
+      "manuscriptSha256": "91d342b17e15d37715014ef29c48e26f4c67c47c6324a3d711b2ca96c208cb6f"
+    },
+    {
+      "id": 81,
+      "title": "81단계 — be allowed to / let",
+      "url": "https://app.notion.com/p/3e90e2451ae38108b240f495bf5e7303",
+      "edited": "2026-09-30T00:19:25.118Z",
+      "bodyCharacters": 3242,
+      "bodySha256": "002ca0b8ee53ec9c7beb6fa20348fa29fe18ef48d4f14510e4990bd88f3dcb28",
+      "manuscriptSha256": "c44e6b53a3878b3906a366dd9b162a8106e8f4b3b58338ef9c8a8c0cc10214c6"
+    },
+    {
+      "id": 82,
+      "title": "82단계 — needn't / don't need to / don't have to",
+      "url": "https://app.notion.com/p/3e90e2451ae38181a998c24bb1bb9fb6",
+      "edited": "2026-09-30T00:19:34.711Z",
+      "bodyCharacters": 3309,
+      "bodySha256": "038c6c31564a32c669673db697c5adba81c9950db8371fa0538bec0cf4366095",
+      "manuscriptSha256": "7ef2042faae4e98b01333b344174473e4f057ad5c5a982c8a079995926c231ed"
+    },
+    {
+      "id": 83,
+      "title": "83단계 — may as well / might as well",
+      "url": "https://app.notion.com/p/3e90e2451ae3814e9f8ac59283336292",
+      "edited": "2026-09-30T00:19:43.445Z",
+      "bodyCharacters": 2779,
+      "bodySha256": "6638458a3d14f5e5981df73439902ae3ca2be0f2943a9f605e045aca8ae18f35",
+      "manuscriptSha256": "d96327871cb64832797bb4d79a25782bf9940b812fff8dede2ef6bf14c5b59c0"
+    },
+    {
+      "id": 84,
+      "title": "84단계 — be about to / be going to",
+      "url": "https://app.notion.com/p/3e90e2451ae381ceb19ac768696e5a61",
+      "edited": "2026-09-30T00:19:53.151Z",
+      "bodyCharacters": 3374,
+      "bodySha256": "b2e340d92d9d1fcea39f8ac4d22793ca63a3e513f11482158757f0c844be5cbd",
+      "manuscriptSha256": "cc1f0da9753b3048ea4708e2a0de2442d76f9977baa3fb38aadc09f336055d31"
+    },
+    {
+      "id": 85,
+      "title": "85단계 — 미래진행형 will be + -ing",
+      "url": "https://app.notion.com/p/3e90e2451ae381dab883d47ad25a6bd7",
+      "edited": "2026-09-30T00:20:00.433Z",
+      "bodyCharacters": 3325,
+      "bodySha256": "81bc32a2de602011d19018cf5baa2cfe116496b1b2a97133e60cca803aa79ff6",
+      "manuscriptSha256": "ab853ea5b6ebfc3459a3fada64676f60f430db290a26f01ee2861ed6a15ff62f"
+    },
+    {
+      "id": 86,
+      "title": "86단계 — 미래완료 will have + p.p.",
+      "url": "https://app.notion.com/p/3e90e2451ae3813ba5abce404074fe5f",
+      "edited": "2026-09-30T00:20:07.379Z",
+      "bodyCharacters": 3495,
+      "bodySha256": "14a3b4d817d5f6a46ee57d64ba8f3ff39cce5dd305d464daf0084e8090d94d45",
+      "manuscriptSha256": "c941de113e61768998044d3c3088029a69ec812bfa63d39bdbdb9698a617474b"
+    },
+    {
+      "id": 87,
+      "title": "87단계 — 미래완료진행형 will have been + -ing",
+      "url": "https://app.notion.com/p/3e90e2451ae381f3b1e4ea0458a0271c",
+      "edited": "2026-09-30T00:16:14.104Z",
+      "bodyCharacters": 3466,
+      "bodySha256": "12e98759c8809764b8eb42c4d3ef17a0b44e28197e6ed56fe2f315ce064f190b",
+      "manuscriptSha256": "006e0f0c8699f2d6509b396285163ecf232680460a2c6be3c81e8836843fe7c7"
+    },
+    {
+      "id": 88,
+      "title": "88단계 — 무관사(Zero Article)와 일반적 의미",
+      "url": "https://app.notion.com/p/3e90e2451ae381379155c38a3bef8e2b",
+      "edited": "2026-09-30T00:17:05.765Z",
+      "bodyCharacters": 3312,
+      "bodySha256": "2b807f68aeb941cd748940ffca01fa919f9ab6e502d49b277744c96d75f87cd2",
+      "manuscriptSha256": "bd38f5f1a6f6c6204ae8a93ba0d62707d650716f0ce6791fa230aac3ea137175"
+    },
+    {
+      "id": 89,
+      "title": "89단계 — 수량표현 much / many / a lot of / few / little",
+      "url": "https://app.notion.com/p/3e90e2451ae381b4a25eebf3ab30e5c5",
+      "edited": "2026-09-30T00:17:12.816Z",
+      "bodyCharacters": 3529,
+      "bodySha256": "f5b8e502665b81d1491a77fafe6218a68974abcf0104156a50064d279993756e",
+      "manuscriptSha256": "456c817c4892ef7a8d204b964a4260380cf10d732a53c59f59fa34f5c9b5ca31"
+    },
+    {
+      "id": 90,
+      "title": "90단계 — each / every / all / both / either / neither",
+      "url": "https://app.notion.com/p/3e90e2451ae3818087c7f98180404482",
+      "edited": "2026-09-30T00:17:19.413Z",
+      "bodyCharacters": 3549,
+      "bodySha256": "4897f6387ab5d2a6b6e8a1be64293f303f0fff67a04c93cbaa8d9a111ade2972",
+      "manuscriptSha256": "b99318da01115afba903d2f7a43955dfea6a7eaecb0a0799e4b7c56c8af9477a"
+    },
+    {
+      "id": 91,
+      "title": "91단계 — another / other / others / the other / the others",
+      "url": "https://app.notion.com/p/3e90e2451ae38188bed4ca5d7f89076f",
+      "edited": "2026-09-30T00:17:35.741Z",
+      "bodyCharacters": 3428,
+      "bodySha256": "bf1ea08300af8da265883a34bc912666d93dd9ed73ebb874c2e694db7b994c28",
+      "manuscriptSha256": "a73023682178fc9285a9f27d1889f276b4bf9c6efd21c36cdf4386daa6ba5a09"
+    },
+    {
+      "id": 92,
+      "title": "92단계 — 재귀대명사 myself / yourself / himself ...",
+      "url": "https://app.notion.com/p/3e90e2451ae3817da1f9d4fcafa32ee9",
+      "edited": "2026-09-30T00:17:42.786Z",
+      "bodyCharacters": 3267,
+      "bodySha256": "123bc414d31467114b379a569e13cde6188e6f6952e3dc0e19095b35066da174",
+      "manuscriptSha256": "25bb6cc75bae2f82c5622c8f9f8f1063e1d43ef117740217f76e1fb585454380"
+    },
+    {
+      "id": 93,
+      "title": "93단계 — 상호대명사 each other / one another",
+      "url": "https://app.notion.com/p/3e90e2451ae381138634c62c1d0e6f48",
+      "edited": "2026-09-30T00:17:50.739Z",
+      "bodyCharacters": 3284,
+      "bodySha256": "d97b15518e96575a8c1285e2f4413af1a1ab86e27eb04d4cf62492488cef0871",
+      "manuscriptSha256": "335893dd5bdff36d512edf0e0ac9e21673bc1acdb0d5d658114c7df7b9943ff5"
+    },
+    {
+      "id": 94,
+      "title": "94단계 — 부가의문문 Question Tags",
+      "url": "https://app.notion.com/p/3e90e2451ae38173a800d727313e1f21",
+      "edited": "2026-09-30T00:18:22.696Z",
+      "bodyCharacters": 2989,
+      "bodySha256": "15264b7831b1c127781206f45f8f2c4e1b12cb204cbb5f9a1145d1dd5ad79028",
+      "manuscriptSha256": "ea37550c8efbd05f445713147b31689277244c9b7e913550866a943b5c624c96"
+    },
+    {
+      "id": 95,
+      "title": "95단계 — 부정의문문 Negative Questions",
+      "url": "https://app.notion.com/p/3e90e2451ae381ce96b7c2f6450d248f",
+      "edited": "2026-09-30T00:18:30.608Z",
+      "bodyCharacters": 3004,
+      "bodySha256": "e80034bcfa57274ec74c89d12d7e992fcb0afcb973de8edaadce58d20b66f694",
+      "manuscriptSha256": "d53ebf70eca5b325fc5c804323dfebafe297e3251d78e69703a8700ade2315a5"
+    },
+    {
+      "id": 96,
+      "title": "96단계 — 동의 표현 so / neither / too / either",
+      "url": "https://app.notion.com/p/3e90e2451ae3811e86b3de74aaece2a2",
+      "edited": "2026-09-30T00:18:39.860Z",
+      "bodyCharacters": 3106,
+      "bodySha256": "ff5a380cf95678f9939276017df1c739d3a872d5c24d9aabb29f5f9140c1004d",
+      "manuscriptSha256": "a03d8187dea83ecd7741a93e2f3b1c2bace6fa11dce2da4ddeba80412df0a6e2"
+    },
+    {
+      "id": 97,
+      "title": "97단계 — 구동사와 목적어 위치",
+      "url": "https://app.notion.com/p/3e90e2451ae3813693add69f4e279564",
+      "edited": "2026-09-30T00:18:54.073Z",
+      "bodyCharacters": 3240,
+      "bodySha256": "fd78ecaf882773bd2dd63ad15ad90771e0609947b1d70a5f49ec3cae76499301",
+      "manuscriptSha256": "60b300c0261a5ee42aae6e390be7b24455277963c9478a1aa054f12a62333bcf"
+    },
+    {
+      "id": 98,
+      "title": "98단계 — 상관접속사 both...and / either...or / neither...nor / not only...but also",
+      "url": "https://app.notion.com/p/3e90e2451ae381df992ed19bdaade89c",
+      "edited": "2026-09-30T00:19:11.556Z",
+      "bodyCharacters": 3661,
+      "bodySha256": "2f03622ad19467d7b7df4ff4c177c20c20cb155d7b911367ef7bf7767debd0ea",
+      "manuscriptSha256": "19d8d047b393f5421aff46c2a89c8e6ed21250de4b33e2ec5a660199c321e220"
+    },
+    {
+      "id": 99,
+      "title": "99단계 — -ing / -ed 분사형용사",
+      "url": "https://app.notion.com/p/3e90e2451ae381099fc2e8b906f8e05e",
+      "edited": "2026-09-30T00:19:01.345Z",
+      "bodyCharacters": 3327,
+      "bodySha256": "1b5278f498d0d5160273d2a681c5f51bd1eff8e2d5adcf0d3b79d880911df735",
+      "manuscriptSha256": "29f524921287a291ac7815a552a09595136e4bb7212cea4369f49ea4406c8a28"
+    },
+    {
+      "id": 100,
+      "title": "100단계 — 관계대명사 심화: whom / 전치사 + 관계대명사",
+      "url": "https://app.notion.com/p/3e90e2451ae38132a6eef893a4962570",
+      "edited": "2026-09-30T00:19:28.540Z",
+      "bodyCharacters": 3378,
+      "bodySha256": "a128de8017f335cbb7c0c1a76376a94bb49f5cb30af1170d87ede5b3902b7553",
+      "manuscriptSha256": "44d9773e34a9c843a1ff38fce3081e0c2cab23ff8e548a2cb33ab8ef8a0efbb4"
+    },
+    {
+      "id": 101,
+      "title": "101단계 — 축약 관계절 Reduced Relative Clauses",
+      "url": "https://app.notion.com/p/3e90e2451ae3817686e4cffaba4c239a",
+      "edited": "2026-09-30T00:19:37.832Z",
+      "bodyCharacters": 3535,
+      "bodySha256": "e6e2eed77db05b3e7376f40fa4ce61b6814b8f18603051462303104ff1dd280e",
+      "manuscriptSha256": "1172d9a858ae9e99658cb95f3435bfa4ff0404a9b586db658ff3a411c0271b4f"
+    },
+    {
+      "id": 102,
+      "title": "102단계 — 분사구문 기본: 시간·이유·동시동작",
+      "url": "https://app.notion.com/p/3e90e2451ae3812984bfc55fb359f566",
+      "edited": "2026-09-30T00:19:46.649Z",
+      "bodyCharacters": 3241,
+      "bodySha256": "3ced7a2ef34db42787fcaa8daa618ea9c3d496e5040c974267d1bc72973a3ccd",
+      "manuscriptSha256": "67a77b59b9d07b226aecce3b19e5da04334b3e7f94f5260820cbcbbc7da154a6"
+    },
+    {
+      "id": 103,
+      "title": "103단계 — 완료분사 Having + p.p.",
+      "url": "https://app.notion.com/p/3e90e2451ae3811e8273c9e1040efd28",
+      "edited": "2026-09-30T00:20:15.421Z",
+      "bodyCharacters": 3572,
+      "bodySha256": "2f1357785b4cfa8aabb12b0bc91ba7bf9e2931f78348456f30ab3ad359c56608",
+      "manuscriptSha256": "976b54fae599769d9706177b36ca6b78301f26240395401a8f1b5999ad60c21f"
+    },
+    {
+      "id": 104,
+      "title": "104단계 — to부정사 심화: to be / to have p.p. / to be p.p.",
+      "url": "https://app.notion.com/p/3e90e2451ae381c09533ca801df2f968",
+      "edited": "2026-09-30T00:20:32.530Z",
+      "bodyCharacters": 3686,
+      "bodySha256": "7f6f76832ca373e4eceec27b45f18abc48aa09fd7e0a8f3ee6b7b80a8c7778ba",
+      "manuscriptSha256": "053039c1bec77d1cb3ac7b7067c8aedc856f9c87a54450560c94515f94691a7d"
+    },
+    {
+      "id": 105,
+      "title": "105단계 — 동명사 심화: being p.p. / having p.p.",
+      "url": "https://app.notion.com/p/3e90e2451ae381c59c19f8310a19d6c1",
+      "edited": "2026-09-30T00:20:24.524Z",
+      "bodyCharacters": 3593,
+      "bodySha256": "3bf26f4cf2ec7004c566338b5f06d0695a431ede545417f1388fd62911f48998",
+      "manuscriptSha256": "ed82450d70b6a57de9624900b4842f5f91a41a0c2273de0386a32a3562e503bd"
+    },
+    {
+      "id": 106,
+      "title": "106단계 — 보도·추측 수동태 be said / believed / expected to",
+      "url": "https://app.notion.com/p/3e90e2451ae381b7a677d4a75df98479",
+      "edited": "2026-09-30T00:20:48.112Z",
+      "bodyCharacters": 3753,
+      "bodySha256": "21fd9e007151b045ff66c821ae66e600353d89842289aba6effc57c4a4f00733",
+      "manuscriptSha256": "6af46c848cd9407df79470d664e3a8542160d8796e6693aded7656b7a0296bc4"
+    },
+    {
+      "id": 107,
+      "title": "107단계 — 부정어 도치 Never / Rarely / Hardly / Not only",
+      "url": "https://app.notion.com/p/3e90e2451ae381a395c7f18530d22e26",
+      "edited": "2026-09-30T00:20:55.854Z",
+      "bodyCharacters": 3666,
+      "bodySha256": "96bfce1270057616a98fac2b5af6472fd30a26a65fa2f1a63a979e5e04044223",
+      "manuscriptSha256": "228d412662bf07d996966a99dd93601913e6a3306542c1315b6624d88eb4e4f0"
+    },
+    {
+      "id": 108,
+      "title": "108단계 — 조건절 도치 Had / Were / Should",
+      "url": "https://app.notion.com/p/3e90e2451ae3816686d1c15a19bb3c66",
+      "edited": "2026-09-30T00:21:03.548Z",
+      "bodyCharacters": 3686,
+      "bodySha256": "93f76e7398d690fe0056813cefe3c0e0c6e22c2b25a74df3fc04d7040ad62a23",
+      "manuscriptSha256": "cab8832357ec86b5c35ccb24d21463bfa1c099cda36a9179e9dd69efd36d89fc"
+    },
+    {
+      "id": 109,
+      "title": "109단계 — 강조구문 It is/was ... that",
+      "url": "https://app.notion.com/p/3e90e2451ae38165b0b0e3cfb8dbfa4e",
+      "edited": "2026-09-30T00:21:15.277Z",
+      "bodyCharacters": 3393,
+      "bodySha256": "0525dfaa73781bf06e3c804fe7d7889a7893cf86b680d8105d27aebbfed50848",
+      "manuscriptSha256": "59d40514204070a6f738d1b3d47ee88274ab71f998519773567d753b047bca2e"
+    },
+    {
+      "id": 110,
+      "title": "110단계 — 의사분열문 Pseudo-cleft: What ... is ...",
+      "url": "https://app.notion.com/p/3e90e2451ae38126a3c4d156c6f7452c",
+      "edited": "2026-09-30T00:21:22.065Z",
+      "bodyCharacters": 3213,
+      "bodySha256": "3ccd84f88759b28c2acf139b49e2b73446c637c56a370ba590adcf34d08bbc0a",
+      "manuscriptSha256": "ebadd306b22ecadc98875b67cd2339f8413e1ede55035092e7754fbc1f0e1c59"
+    },
+    {
+      "id": 111,
+      "title": "111단계 — do 강조",
+      "url": "https://app.notion.com/p/3e90e2451ae38120a119dd31634a35cd",
+      "edited": "2026-09-30T00:21:30.233Z",
+      "bodyCharacters": 2904,
+      "bodySha256": "cf8d349bc8327f476cffff99d4dac800bc65243bd382c13f63bad4dabfb4160a",
+      "manuscriptSha256": "fe38f38c437a72a9c8fbbc41f34cdf637a84bc226ac1c1e16436726f95ebc78c"
+    },
+    {
+      "id": 112,
+      "title": "112단계 — 생략 Ellipsis: 조동사와 to의 생략",
+      "url": "https://app.notion.com/p/3e90e2451ae381a7818be04c253cd87c",
+      "edited": "2026-09-30T00:21:33.358Z",
+      "bodyCharacters": 3345,
+      "bodySha256": "6edbe74e422a647d58944d06407b7f8f9222d65c9567c4bdec1998dd49b5e278",
+      "manuscriptSha256": "7f3cabbca04f0ba59791f96aaa5b1cfcfda291622c352eef7172b696b9e24435"
+    },
+    {
+      "id": 113,
+      "title": "113단계 — 대용표현 one/ones / do so / so/not",
+      "url": "https://app.notion.com/p/3e90e2451ae3818ba9e2f8f0e613d0a4",
+      "edited": "2026-09-30T00:21:40.097Z",
+      "bodyCharacters": 3473,
+      "bodySha256": "c791d51646a33c1ed5286d124e66545bca5747935705f2bb5d0d32d7921c2fd2",
+      "manuscriptSha256": "0ae561ba1deb681af07ea26d30f7bb8f95799599d61d0bc32c16e7c90cafa556"
+    },
+    {
+      "id": 114,
+      "title": "114단계 — 비교 표현 심화 the more..., the more... / less / fewer",
+      "url": "https://app.notion.com/p/3e90e2451ae38179a134fbe1cfa21dac",
+      "edited": "2026-09-30T00:21:26.844Z",
+      "bodyCharacters": 3300,
+      "bodySha256": "a02d5728fc2d330032729689b96c9dac4288b98cfa39c222ae9d1834b38a2597",
+      "manuscriptSha256": "807a993a64fbf1a16eec11bf3fb4c9d48a89565b868ec7bb72332f507685bdeb"
+    },
+    {
+      "id": 115,
+      "title": "115단계 — 양보 although / even though / despite / in spite of",
+      "url": "https://app.notion.com/p/3e90e2451ae38109b7e4f2da5d62fdd7",
+      "edited": "2026-09-30T00:22:06.011Z",
+      "bodyCharacters": 3637,
+      "bodySha256": "271c9ccd121b0c85a772d50ab914fcb5d50723cac0d7e9a851678c66f05815e4",
+      "manuscriptSha256": "2f40ea310e8c1c3f052cf28ec4d3ae6f7ba990facb4c8e0131daadecf5ddde08"
+    },
+    {
+      "id": 116,
+      "title": "116단계 — 조건 표현 unless / as long as / provided / in case",
+      "url": "https://app.notion.com/p/3e90e2451ae381a59432f05d051b15a2",
+      "edited": "2026-09-30T00:21:49.776Z",
+      "bodyCharacters": 3680,
+      "bodySha256": "7cf7acb001269f639290bf6e493fe10559563e2c4cdb29762e6c673ff49afd77",
+      "manuscriptSha256": "53cc0b908bbfa0c9ba80449eb714f194a5a4a3c53ac7dca4fa398c92da9d9cb8"
+    },
+    {
+      "id": 117,
+      "title": "117단계 — 요구·제안의 가정법 that + 동사원형",
+      "url": "https://app.notion.com/p/3e90e2451ae381a1a9bbffd62950f5c0",
+      "edited": "2026-09-30T00:21:58.203Z",
+      "bodyCharacters": 3730,
+      "bodySha256": "eb16982046f24fc81fb228972ecd1142e0f1da0fa3c2b0c182f9f0f3fba155e3",
+      "manuscriptSha256": "e980d60838c8abdbc91898a84ce5da1422bf05def68dd40587db851968e16241"
+    },
+    {
+      "id": 118,
+      "title": "118단계 — 복합 명사구와 명사 수식",
+      "url": "https://app.notion.com/p/3e90e2451ae3813a9b98c2eda612fd72",
+      "edited": "2026-09-30T00:22:14.604Z",
+      "bodyCharacters": 3344,
+      "bodySha256": "03b56a3f40af5d80fafb75c14b8a6fb81bb76683319a4a03d7724671b3b3f61a",
+      "manuscriptSha256": "b9e76dcb9a39233a8af3ff1d6784bb8d0ea9a7e4ae42339a395e6ef804b051e0"
+    },
+    {
+      "id": 119,
+      "title": "119단계 — 병렬구조 Parallelism",
+      "url": "https://app.notion.com/p/3e90e2451ae381118617e597703b9526",
+      "edited": "2026-09-30T00:22:30.386Z",
+      "bodyCharacters": 3705,
+      "bodySha256": "0a255a44bbcbd133110008bfd6a7421ceba933487bac9f29c8ef1b3d445ea9e1",
+      "manuscriptSha256": "d72c003e372cc0aba95b487d04c737202378bbb40fbd080c71a1fa722e367085"
+    },
+    {
+      "id": 120,
+      "title": "120단계 — 전체 문장 분석과 영문법 종합",
+      "url": "https://app.notion.com/p/3e90e2451ae381ba90e1d51d192a8b80",
+      "edited": "2026-09-30T00:22:22.784Z",
+      "bodyCharacters": 5451,
+      "bodySha256": "cabab280f378ef35e07e8cf215d0bb75904b216fcc64bfab0112ffe9ce1c3786",
+      "manuscriptSha256": "79308fb65b595c3d479656c6d1b985b52597c168eb2658f0b42ca1d9d30bab68"
+    }
+  ]
+}

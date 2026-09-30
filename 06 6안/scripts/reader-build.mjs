@@ -3,6 +3,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {Marked, Renderer} from '../vendor/marked.mjs';
+import {notionBlockBoundaries, notionTable} from './notion-markdown.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -38,7 +39,7 @@ export function resolveAnchor(chapter, anchor) {
   return meaning ? chapter.toc.find(h=>meaning.test(h.label))?.id||'concept' : 'concept';
 }
 
-export function renderChapter(id, markdown) {
+export function renderChapter(id, markdown, {format='markdown'}={}) {
   const toc=[];
   let title='';
   const renderer=new Renderer();
@@ -56,7 +57,7 @@ export function renderChapter(id, markdown) {
     toc.push({id:anchor,label,depth});
     return `<h${depth} id="${anchor}" data-reading-anchor="${anchor}">${inline}</h${depth}>\n`;
   };
-  renderer.html=token=>escape(token.text);
+  renderer.html=token=>format==='notion' && /^<br\s*\/?\s*>$/i.test(token.text)?'<br>':escape(token.text);
   renderer.image=token=>escape(token.text);
   renderer.link=function(token) {
     const label=this.parser.parseInline(token.tokens);
@@ -74,16 +75,23 @@ export function renderChapter(id, markdown) {
     name:'strong',level:'inline',
     start:src=>src.indexOf('**'),
     tokenizer(src) {
+      // Notion emits adjacent rich-text runs as **text ****`code`**.
+      // Tokenize each run independently, including its boundary spaces.
+      if(format==='notion') {
+        const run=/^\*\*(?!\*)([^\n]+?)\*\*/.exec(src);
+        if(run)return {type:'strong',raw:run[0],text:run[1],tokens:this.lexer.inlineTokens(run[1])};
+      }
       const match=/^\*\*(?!\*)(\S(?:[^\n]*?\S)?)\*\*(?!\*)/.exec(src);
       if(match && /^[가-힣]/.test(src.slice(match[0].length))) {
         return {type:'strong',raw:match[0],text:match[1],tokens:this.lexer.inlineTokens(match[1])};
       }
     }
   }]});
-  const html=parser.parse(markdown);
+  if(format==='notion')parser.use({extensions:[notionTable]});
+  const html=parser.parse(format==='notion'?notionBlockBoundaries(markdown):markdown);
   if(!title)throw Error('Missing chapter title: '+id);
   if(toc.length>80)throw Error('Too many headings for persisted anchors: '+id);
-  const chapter={id,title,html,toc,origin:id<=83?'conversation':'continuation',characters:markdown.length};
+  const chapter={id,title,html,toc,origin:format==='notion'?'notion':id<=83?'conversation':'continuation',characters:markdown.length};
   chapter.aliases=Object.fromEntries(['structure','examples','contrast',...Array.from({length:12},(_,i)=>'topic-'+(i+1))].map(a=>[a,resolveAnchor(chapter,a)]));
   return chapter;
 }
@@ -108,9 +116,13 @@ function extract(file) {
 }
 
 export function build({check=false}={}) {
+  const sourceFile=path.join(root,'data/notion-source.json');
+  const notion=fs.existsSync(sourceFile)?JSON.parse(fs.readFileSync(sourceFile,'utf8')):null;
+  if(notion&&(notion.format!=='notion-enhanced-markdown'||notion.stages.length!==120))throw Error('Invalid Notion provenance manifest');
   const chapters=Array.from({length:120},(_,i)=> {
     const id=i+1,markdown=fs.readFileSync(path.join(root,'content',String(id).padStart(3,'0')+'.md'),'utf8');
-    return renderChapter(id,markdown);
+    if(notion&&(notion.stages[i].id!==id||notion.stages[i].manuscriptSha256!==hash(markdown)))throw Error('Manuscript differs from imported Notion source: '+id);
+    return renderChapter(id,markdown,{format:notion?'notion':'markdown'});
   });
   for(let part=0;part<6;part++) {
     const payload=JSON.stringify(chapters.slice(part*20,part*20+20)).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');

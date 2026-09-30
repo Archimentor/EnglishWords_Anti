@@ -3,5 +3,7 @@
 content/*.md text eol=lf whitespace=-blank-at-eol
 data/chapters-*.js text eol=lf
 data/conversation-source.json text eol=lf
+data/notion-source.json text eol=lf
+data/source.js text eol=lf
 scripts/*.mjs text eol=lf
 vendor/* text eol=lf
