@@ -5,6 +5,8 @@ import {renderChapter} from './reader-build.mjs';
 // merges the explanation into the quote and leaks <br>/table markup.
 const source='# 84단계 — 미래 표현\n\n첫 번째 문단.\n두 번째 문단.\n> **곧 출발한다.**<br>It is about to leave.\n> 별도의 인용문.\n인용문 밖의 설명.\n## 비교\n<table header-row="true">\n<tr>\n<td>표현</td>\n<td>뜻</td>\n</tr>\n<tr>\n<td>**about to**</td>\n<td>곧<br>바로 직전</td>\n</tr>\n</table>\n## 연습\n1. **첫 질문**\n\t→ 첫 질문의 설명\n2. 두 번째 질문\n다음은 **85단계 — ****`will be`**** 표현**이다.\n';
 const chapter=renderChapter(84,source,{format:'notion'});
+const escapedHeading=renderChapter(47,'# 47단계 — 시간\n\n## 1. `when` — \\~할 때\n## 연습',{format:'notion'});
+assert.equal(escapedHeading.toc[0].label,'1. when — ~할 때','The sidebar uses displayed heading text, not Notion escape characters');
 assert.match(chapter.html,/<p>첫 번째 문단\.<\/p>\s*<p>두 번째 문단\.<\/p>/,'Keep separate Notion paragraph blocks');
 assert.match(chapter.html,/<blockquote>\s*<p><strong>곧 출발한다\.<\/strong><br>It is about to leave\.<\/p>\s*<\/blockquote>/,'Keep inline Notion line breaks and quote boundaries');
 assert.match(chapter.html,/<\/blockquote>\s*<p>인용문 밖의 설명\.<\/p>/,'Do not swallow following prose into a lazy Markdown quote');

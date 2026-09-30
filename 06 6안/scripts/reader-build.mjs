@@ -45,7 +45,7 @@ export function renderChapter(id, markdown, {format='markdown'}={}) {
   const renderer=new Renderer();
   renderer.heading=function(token) {
     const inline=this.parser.parseInline(token.tokens);
-    const label=token.text.replace(/[`*_]/g,'');
+    const label=token.text.replace(/\\([\\`*_{}\[\]()#+\-.!~|<>])/g,'$1').replace(/[`*_]/g,'');
     if(!title && new RegExp('^'+id+'단계(?:\\s|[—–-]|$)').test(label)) {
       title=label;
       return `<h1 id="lesson-title" data-id="${id}">${inline}</h1>\n`;

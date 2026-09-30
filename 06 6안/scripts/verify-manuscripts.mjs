@@ -45,6 +45,7 @@ if(fs.existsSync(notionFile)) {
     assert.equal(visibleWords,originalWords,`Stage ${record.id}: rendered words or numbers changed`);
     const tableCount=(body.match(/<table\b/g)||[]).length;
     assert.equal((chapters[record.id-1].html.match(/<table>/g)||[]).length,tableCount,`Stage ${record.id}: source table lost`);
+    assert.ok((chapters[record.id-1].html.match(/<br>/g)||[]).length>=(body.match(/<br>/g)||[]).length,`Stage ${record.id}: inline source breaks lost`);
     tables+=tableCount;breaks+=(body.match(/<br>/g)||[]).length;
     if(process.argv[2]) {
       const capture=JSON.parse(fs.readFileSync(path.join(process.argv[2],`${String(record.id).padStart(3,'0')}.json`),'utf8'));
